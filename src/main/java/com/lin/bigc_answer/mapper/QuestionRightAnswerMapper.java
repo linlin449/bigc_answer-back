@@ -12,7 +12,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @author lin
  * @since 2022-07-06
  */
-@Mapper
 public interface QuestionRightAnswerMapper extends BaseMapper<QuestionRightAnswer> {
 
 }
