@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/lin.bigc_answer/student-like-question")
-public class StudentLikeQuestionController {
+public class StudentFalseQuestionController {
 
 }
 

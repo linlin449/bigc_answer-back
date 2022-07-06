@@ -1,6 +1,6 @@
 package com.lin.bigc_answer.service;
 
-import com.lin.bigc_answer.entity.StudentLikeQuestion;
+import com.lin.bigc_answer.entity.StudentFalseQuestion;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author lin
  * @since 2022-07-05
  */
-public interface StudentLikeQuestionService extends IService<StudentLikeQuestion> {
+public interface StudentFalseQuestionService extends IService<StudentFalseQuestion> {
 
 }
