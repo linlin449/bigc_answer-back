@@ -1,31 +1,66 @@
 package com.lin.bigc_answer.utils;
 
+import com.lin.bigc_answer.exception.ErrorCode;
 import lombok.Data;
 
 @Data
 public class R {
-    private Boolean flag;
+    // 消息码
+    private int code;
+    // 消息体
     private Object data;
+    // 消息提示
     private String msg;
 
-    public R(){}
-
-    public R(Boolean flag){
-        this.flag = flag;
+    public R() {
     }
 
-    public R(Boolean flag,Object data){
-        this.flag = flag;
+    private R(int code, String msg, Object data) {
+        this.code = code;
         this.data = data;
-    }
-
-    public R(Boolean flag,String msg){
-        this.flag = flag;
         this.msg = msg;
     }
 
-    public R(String msg){
-        this.flag = false;
+    public R success(String msg, Object data, int errorCode) {
+        this.code = errorCode;
         this.msg = msg;
+        this.data = data;
+        return this;
     }
+
+
+    public R success(String msg, Object data) {
+        this.code = ErrorCode.NORMAL_SUCCESS;
+        this.msg = msg;
+        this.data = data;
+        return this;
+    }
+
+    public R success(String msg) {
+        this.code = ErrorCode.NORMAL_SUCCESS;
+        this.msg = msg;
+        return this;
+    }
+
+    public R fail(String msg, Object data, int errorCode) {
+        this.code = errorCode;
+        this.msg = msg;
+        this.data = data;
+        return this;
+    }
+
+
+    public R fail(String msg, Object data) {
+        this.code = ErrorCode.NORMAL_ERROR;
+        this.msg = msg;
+        this.data = data;
+        return this;
+    }
+
+    public R fail(String msg) {
+        this.code = ErrorCode.NORMAL_ERROR;
+        this.msg = msg;
+        return this;
+    }
+
 }

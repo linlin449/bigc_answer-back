@@ -12,5 +12,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-07-05
  */
 public interface StudentService extends IService<Student> {
-
+    /**
+     * 通过用户名查找学生
+     * @param username 用户名
+     * @return 查询成功返回Student实体类, 查询失败返回null
+     */
+    Student queryByUserName(String username);
 }
