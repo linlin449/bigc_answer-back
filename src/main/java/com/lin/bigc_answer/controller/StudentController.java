@@ -2,7 +2,9 @@ package com.lin.bigc_answer.controller;
 
 
 import com.lin.bigc_answer.config.shiro.UserToken;
+import com.lin.bigc_answer.entity.user.Student;
 import com.lin.bigc_answer.exception.ErrorCode;
+import com.lin.bigc_answer.service.StudentService;
 import com.lin.bigc_answer.service.impl.CaptchaServiceImpl;
 import com.lin.bigc_answer.utils.R;
 import com.lin.bigc_answer.utils.UserRole;
@@ -30,7 +32,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/student")
 public class StudentController {
-
+    @Resource(name = "studentServiceImpl")
+    StudentService studentService;
     @Resource(name = "CaptchaServiceImpl")
     private CaptchaServiceImpl captchaService;
 
@@ -64,6 +67,21 @@ public class StudentController {
             //密码错误
             return new R().fail("用户名或密码错误");
         }
+    }
+    @PostMapping("/register")
+    public R userRegister(@RequestBody Student student) {
+        if (student.getUsername()==null||student.getPassword()==null||
+                student.getEmail()==null||student.getName()==null)
+        {
+            return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        }
+        try {
+            studentService.save(student);
+        }
+        catch (Exception e) {
+            return new R().fail("服务器错误");
+        }
+        return new R().success("注册成功");
     }
 }
 

@@ -39,6 +39,7 @@ public class ShiroConfig {
         bean.setFilters(filterMap);
         //无需授权
         map.put("/student/login", "anon");//登陆接口
+        map.put("/student/register", "anon");//注册接口
         map.put("/captcha/**", "anon");//验证码接口
         map.put("/error/**", "anon");//错误页面
         map.put("/**", "authc-cors");
