@@ -6,6 +6,7 @@ import com.lin.bigc_answer.entity.user.Teacher;
 import com.lin.bigc_answer.exception.ErrorCode;
 import com.lin.bigc_answer.service.CaptchaService;
 import com.lin.bigc_answer.service.TeacherService;
+import com.lin.bigc_answer.utils.JWTUtil;
 import com.lin.bigc_answer.utils.R;
 import com.lin.bigc_answer.utils.UserRole;
 import org.apache.shiro.SecurityUtils;
@@ -15,6 +16,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -55,7 +57,11 @@ public class TeacherController {
         UserToken userToken = new UserToken(username, password, UserRole.TEACHER);
         try {
             subject.login(userToken);
-            return new R().success("登陆成功");
+            //登陆成功,下发token
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put("token", JWTUtil.createToken(username));
+            map.put("expire", JWTUtil.getExpireTime());
+            return new R().success("登陆成功", map);
         } catch (UnknownAccountException e) {
             //用户不存在
             return new R().fail("用户名或密码错误");

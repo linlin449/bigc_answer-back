@@ -8,6 +8,7 @@ import com.lin.bigc_answer.service.CaptchaService;
 import com.lin.bigc_answer.service.StudentService;
 import com.lin.bigc_answer.service.StudentService;
 import com.lin.bigc_answer.service.impl.CaptchaServiceImpl;
+import com.lin.bigc_answer.utils.JWTUtil;
 import com.lin.bigc_answer.utils.R;
 import com.lin.bigc_answer.utils.UserRole;
 import org.apache.shiro.SecurityUtils;
@@ -19,6 +20,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -50,7 +52,6 @@ public class StudentController {
         if (username == null || password == null || verKey == null || verCode == null) {
             return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
         }
-        //TODO 获取验证码并进行验证
         try {
             if (!captchaService.checkVerCode(verKey, verCode)) {
                 return new R().fail("验证码错误", null);
@@ -62,7 +63,11 @@ public class StudentController {
         UserToken userToken = new UserToken(username, password, UserRole.STUDENT);
         try {
             subject.login(userToken);
-            return new R().success("登陆成功");
+            //登陆成功,下发token
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put("token", JWTUtil.createToken(username));
+            map.put("expire", JWTUtil.getExpireTime());
+            return new R().success("登陆成功", map);
         } catch (UnknownAccountException e) {
             //用户不存在
             return new R().fail("用户名或密码错误");
@@ -82,17 +87,16 @@ public class StudentController {
         }
         return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
     }
+
     @PostMapping("/register")
     public R userRegister(@RequestBody Student student) {
-        if (student.getUsername()==null||student.getPassword()==null||
-                student.getEmail()==null||student.getName()==null)
-        {
+        if (student.getUsername() == null || student.getPassword() == null ||
+                student.getEmail() == null || student.getName() == null) {
             return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
         }
         try {
             studentService.save(student);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return new R().fail("服务器错误");
         }
         return new R().success("注册成功");
