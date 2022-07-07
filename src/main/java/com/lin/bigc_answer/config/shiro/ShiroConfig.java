@@ -40,7 +40,12 @@ public class ShiroConfig {
         //无需授权
         map.put("/student/login", "anon");//登陆接口
         map.put("/captcha/**", "anon");//验证码接口
+        map.put("/error/**", "anon");//错误页面
         map.put("/**", "authc-cors");
+
+        //配置自定义错误返回
+        bean.setUnauthorizedUrl("/error/401");
+        bean.setLoginUrl("/error/10000");
 
         bean.setFilterChainDefinitionMap(map);
         return bean;
