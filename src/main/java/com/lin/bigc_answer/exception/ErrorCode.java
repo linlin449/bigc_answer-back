@@ -16,4 +16,6 @@ public interface ErrorCode {
     //常规错误
     int NORMAL_ERROR = 10010;
 
+    //参数错误
+    int PARAMETER_ERROR = 10020;
 }

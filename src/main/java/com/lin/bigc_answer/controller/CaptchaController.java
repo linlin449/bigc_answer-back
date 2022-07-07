@@ -25,7 +25,7 @@ public class CaptchaController {
         SpecCaptcha specCaptcha = new SpecCaptcha(130, 48, 5);
         String verCode = specCaptcha.text().toLowerCase();
         String key = UUID.randomUUID().toString();
-        // 存入redis并设置过期时间为30分钟
+        // 存入redis并设置过期时间为5分钟
         redisUtil.setEx("captcha:" + key, verCode, 5, TimeUnit.MINUTES);
         // 将key和base64返回给前端
         Map<String, String> res = new HashMap<>();
