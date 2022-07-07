@@ -1,10 +1,13 @@
 package com.lin.bigc_answer.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lin.bigc_answer.entity.user.Teacher;
 import com.lin.bigc_answer.mapper.TeacherMapper;
 import com.lin.bigc_answer.service.TeacherService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
  * <p>
@@ -16,5 +19,14 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> implements TeacherService {
+    @Resource
+    private TeacherMapper teacherMapper;
 
+    @Override
+    public Teacher queryByUserName(String username) {
+        if (username == null || username.equals("")) return null;
+        LambdaQueryWrapper<Teacher> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Teacher::getUsername, username);
+        return teacherMapper.selectOne(wrapper);
+    }
 }

@@ -1,8 +1,10 @@
 package com.lin.bigc_answer.mapper;
 
-import com.lin.bigc_answer.entity.user.TeacherStudent;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
+import com.lin.bigc_answer.entity.user.TeacherStudent;
+import com.lin.bigc_answer.entity.utils.StudentDTO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -14,4 +16,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 public interface TeacherStudentMapper extends BaseMapper<TeacherStudent> {
 
+    List<StudentDTO> getStudentListByTeacherId(int teacherId);
 }

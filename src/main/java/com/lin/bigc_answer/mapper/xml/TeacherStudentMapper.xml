@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lin.bigc_answer.mapper.TeacherStudentMapper">
-
+    <select id="getStudentListByTeacherId" parameterType="int" resultType="com.lin.bigc_answer.entity.utils.StudentDTO">
+        SELECT t.student_id as id, s.name, s.username, s.email, s.phone, s.role
+        FROM teacher_student as t
+                 LEFT JOIN student s on s.id = t.student_id
+        WHERE t.teacher_id = #{userId}
+    </select>
 </mapper>

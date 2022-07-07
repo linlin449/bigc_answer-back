@@ -1,7 +1,10 @@
 package com.lin.bigc_answer.service;
 
-import com.lin.bigc_answer.entity.user.Teacher;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lin.bigc_answer.entity.user.Student;
+import com.lin.bigc_answer.entity.user.Teacher;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-07-05
  */
 public interface TeacherService extends IService<Teacher> {
+    /**
+     * 通过用户名查找老师
+     * @param username 用户名
+     * @return 查询成功返回Teacher实体类, 查询失败返回null
+     */
+    Teacher queryByUserName(String username);
 
 }

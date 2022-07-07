@@ -4,6 +4,8 @@ package com.lin.bigc_answer.controller;
 import com.lin.bigc_answer.config.shiro.UserToken;
 import com.lin.bigc_answer.entity.user.Student;
 import com.lin.bigc_answer.exception.ErrorCode;
+import com.lin.bigc_answer.service.CaptchaService;
+import com.lin.bigc_answer.service.StudentService;
 import com.lin.bigc_answer.service.StudentService;
 import com.lin.bigc_answer.service.impl.CaptchaServiceImpl;
 import com.lin.bigc_answer.utils.R;
@@ -12,11 +14,9 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -32,10 +32,13 @@ import java.util.Map;
 @RestController
 @RequestMapping("/student")
 public class StudentController {
+
+    @Resource(name = "captchaServiceImpl")
+    private CaptchaService captchaService;
+
     @Resource(name = "studentServiceImpl")
-    StudentService studentService;
-    @Resource(name = "CaptchaServiceImpl")
-    private CaptchaServiceImpl captchaService;
+    private StudentService studentService;
+
 
     @PostMapping("/login")
     //学生登陆
@@ -67,6 +70,17 @@ public class StudentController {
             //密码错误
             return new R().fail("用户名或密码错误");
         }
+    }
+
+    @GetMapping("/info/{username}")
+    public R getStudentInfo(@PathVariable("username") String username) {
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isPermitted(UserRole.STUDENT.name() + ":" + username)) {
+            Student student = studentService.queryByUserName(username);
+            student.setPassword("******");
+            return new R().success("success", student);
+        }
+        return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
     }
     @PostMapping("/register")
     public R userRegister(@RequestBody Student student) {

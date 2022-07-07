@@ -19,14 +19,21 @@ import javax.annotation.Resource;
 public class UserRealm extends AuthorizingRealm {
 
     @Resource(name = "studentServiceImpl")
-    StudentService studentService;
+    private StudentService studentService;
 
     //授权
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         String primaryPrincipal = (String) principalCollection.getPrimaryPrincipal();
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        simpleAuthorizationInfo.addStringPermission(primaryPrincipal + ":*");
+        String[] split = primaryPrincipal.split(":");
+        if (split.length < 2) throw new RuntimeException("认证信息异常");
+        if (split[0].equals(UserRole.STUDENT.name())) {
+            simpleAuthorizationInfo.addStringPermission(primaryPrincipal);
+        } else if (split[0].equals(UserRole.TEACHER.name())) {
+            simpleAuthorizationInfo.addStringPermission(primaryPrincipal);
+        }
+        //TODO 管理员授权 以 Role 方式授权
         log.info("身份授权 " + primaryPrincipal);
         return simpleAuthorizationInfo;
     }
@@ -42,6 +49,8 @@ public class UserRealm extends AuthorizingRealm {
                 log.info(userToken.getUserRole().name() + " " + userToken.getUsername() + " 进行登录认证");
                 return new SimpleAuthenticationInfo(userToken.getUserRole().name() + ":" + userToken.getUsername(), student.getPassword(), getName());
             }
+            //TODO 老师登陆
+            //TODO 管理员登陆
         }
         //用户不存在
         return null;

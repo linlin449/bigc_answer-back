@@ -10,7 +10,7 @@ import javax.annotation.Resource;
  * @author th1nk
  * @date 2022/7/7 下午3:06
  */
-@Service("CaptchaServiceImpl")
+@Service
 public class CaptchaServiceImpl implements CaptchaService {
     @Resource
     private RedisUtils redisUtils;

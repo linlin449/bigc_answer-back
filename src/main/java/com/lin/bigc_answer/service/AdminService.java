@@ -1,7 +1,7 @@
 package com.lin.bigc_answer.service;
 
-import com.lin.bigc_answer.entity.user.Admin;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lin.bigc_answer.entity.user.Admin;
 
 /**
  * <p>
@@ -12,5 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-07-05
  */
 public interface AdminService extends IService<Admin> {
-
+    Admin queryByUserName(String username);
 }
