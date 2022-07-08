@@ -1,14 +1,17 @@
 package com.lin.bigc_answer.entity.question;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.io.Serializable;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author lin
@@ -31,6 +34,7 @@ public class Question implements Serializable {
     /**
      * 题目的简单描述，目的，建议等
      */
+    @TableField("`describe`")
     private String describe;
 
     /**

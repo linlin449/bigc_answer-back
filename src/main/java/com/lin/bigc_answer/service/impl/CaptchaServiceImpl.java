@@ -22,4 +22,11 @@ public class CaptchaServiceImpl implements CaptchaService {
         }
         throw new RuntimeException("验证码已过期");
     }
+
+    @Override
+    public void deleteVerCode(String verKey) {
+        if (redisUtils.hasKey("captcha:" + verKey)) {
+            redisUtils.delete("captcha:" + verKey);
+        }
+    }
 }

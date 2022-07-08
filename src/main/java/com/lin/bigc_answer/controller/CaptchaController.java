@@ -4,8 +4,7 @@ import com.lin.bigc_answer.utils.R;
 import com.lin.bigc_answer.utils.RedisUtils;
 import com.wf.captcha.SpecCaptcha;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -33,5 +32,16 @@ public class CaptchaController {
         res.put("image", specCaptcha.toBase64());
         log.info("验证码生成 Key = " + key + " verCode = " + verCode);
         return new R().success("success", res);
+    }
+
+    //TODO 此接口用于开发,生产环境应删除该接口
+    @Deprecated
+    @GetMapping("/value/{key}")
+    private R getValue(@PathVariable("key") String key) {
+        log.warn("用于开发环境的接口正在被使用,如为生产环境,请尽快删除该接口");
+        if (redisUtil.hasKey("captcha:" + key)) {
+            return new R().success(redisUtil.get("captcha:" + key));
+        }
+        return new R().fail("验证码过期");
     }
 }

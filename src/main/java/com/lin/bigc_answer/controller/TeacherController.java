@@ -57,6 +57,7 @@ public class TeacherController {
         UserToken userToken = new UserToken(username, password, UserRole.TEACHER);
         try {
             subject.login(userToken);
+            captchaService.deleteVerCode(verKey);
             //登陆成功,下发token
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("token", JWTUtil.createToken(username, UserRole.TEACHER));
