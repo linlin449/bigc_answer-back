@@ -65,7 +65,7 @@ public class StudentController {
             subject.login(userToken);
             //登陆成功,下发token
             Map<String, Object> map = new LinkedHashMap<>();
-            map.put("token", JWTUtil.createToken(username));
+            map.put("token", JWTUtil.createToken(username, UserRole.STUDENT));
             map.put("expire", JWTUtil.getExpireTime());
             return new R().success("登陆成功", map);
         } catch (UnknownAccountException e) {

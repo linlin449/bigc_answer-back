@@ -17,9 +17,10 @@ public class JWTUtil {//过期时间
     /**
      * 根据username生成token
      * @param username 用户名
+     * @param userRole 用户角色
      * @return token字符串
      */
-    public static String createToken(String username) {
+    public static String createToken(String username, UserRole userRole) {
         try {
             // 设置过期时间
             Date date = new Date(System.currentTimeMillis() + EXPIRE_TIME);
@@ -32,7 +33,8 @@ public class JWTUtil {//过期时间
             // 返回token字符串
             return JWT.create()
                     .withHeader(header)
-                    .withClaim("userId", username)
+                    .withClaim("username", username)
+                    .withClaim("role", userRole.name())
                     .withExpiresAt(date)
                     .sign(algorithm);
         } catch (Exception e) {
@@ -44,10 +46,11 @@ public class JWTUtil {//过期时间
     /**
      * 根据username,自定义过期时间生成token
      * @param username 用户名
+     * @param userRole 用户角色
      * @param expireDate 过期时间(毫秒)
      * @return token字符串
      */
-    public static String createToken(String username, long expireDate) {
+    public static String createToken(String username, UserRole userRole, long expireDate) {
         try {
             // 设置过期时间
             Date date = new Date(System.currentTimeMillis() + expireDate);
@@ -60,7 +63,8 @@ public class JWTUtil {//过期时间
             // 返回token字符串
             return JWT.create()
                     .withHeader(header)
-                    .withClaim("userId", username)
+                    .withClaim("username", username)
+                    .withClaim("role", userRole.name())
                     .withExpiresAt(date)
                     .sign(algorithm);
         } catch (Exception e) {
@@ -70,16 +74,32 @@ public class JWTUtil {//过期时间
     }
 
     /**
-     * 校验token
+     * 从token中获取username
      * @param token token字符串
      * @return 成功返回token信息中的username, 失败返回null
      */
-    public static String verifyToken(String token) {
+    public static String getUserName(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT jwt = verifier.verify(token);
             return jwt.getClaim("username").asString();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 从token中获取userrole
+     * @param token token字符串
+     * @return 成功返回token信息中的userRole, 失败返回null
+     */
+    public static UserRole getUserRole(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            DecodedJWT jwt = verifier.verify(token);
+            return UserRole.valueOf(jwt.getClaim("role").asString());
         } catch (Exception e) {
             return null;
         }

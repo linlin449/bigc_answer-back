@@ -1,8 +1,10 @@
 package com.lin.bigc_answer.config.shiro;
 
+import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,6 +57,11 @@ public class ShiroConfig {
     @Bean
     public DefaultWebSecurityManager defaultWebSecurityManager(@Qualifier("userRealm") UserRealm userRealm) {
         DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
+        //设置SessionManager,去除重定向时Url中的JSESSIONID
+        DefaultWebSessionManager defaultWebSessionManager = new DefaultWebSessionManager();
+        defaultWebSessionManager.setSessionIdUrlRewritingEnabled(false);
+        defaultWebSecurityManager.setSessionManager(defaultWebSessionManager);
+
         defaultWebSecurityManager.setRealm(userRealm);
         return defaultWebSecurityManager;
     }
@@ -63,4 +70,5 @@ public class ShiroConfig {
     public UserRealm userRealm() {
         return new UserRealm();
     }
+
 }
