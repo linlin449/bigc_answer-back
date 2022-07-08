@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 80027
 File Encoding         : 65001
 
-Date: 2022-07-06 17:36:49
+Date: 2022-07-08 21:55:28
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -124,6 +124,7 @@ CREATE TABLE `question` (
   `chapter_id` smallint DEFAULT NULL COMMENT '对应的节',
   `level_id` tinyint DEFAULT NULL COMMENT '难度表，难，中，易',
   `type_id` tinyint DEFAULT NULL COMMENT '类型，单选，多选，简答',
+  `subject_id` smallint DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `search_chapter` (`chapter_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

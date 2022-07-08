@@ -27,5 +27,4 @@ public class Chapter implements Serializable {
 
     private Integer subjectId;
 
-
 }

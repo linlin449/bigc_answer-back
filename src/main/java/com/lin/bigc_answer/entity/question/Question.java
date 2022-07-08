@@ -47,6 +47,10 @@ public class Question implements Serializable {
      */
     private Integer chapterId;
 
+
+
+    private Integer subjectId;
+
     /**
      * 难度表，难，中，易
      */
