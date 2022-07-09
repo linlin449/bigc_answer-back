@@ -5,8 +5,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lin.bigc_answer.entity.user.Student;
+import com.lin.bigc_answer.entity.user.Teacher;
 import com.lin.bigc_answer.entity.user.TeacherStudent;
 import com.lin.bigc_answer.entity.utils.StudentDTO;
+import com.lin.bigc_answer.mapper.StudentMapper;
+import com.lin.bigc_answer.mapper.TeacherMapper;
 import com.lin.bigc_answer.mapper.TeacherStudentMapper;
 import com.lin.bigc_answer.service.StudentService;
 import com.lin.bigc_answer.service.TeacherStudentService;
@@ -30,7 +33,11 @@ public class TeacherStudentServiceImpl extends ServiceImpl<TeacherStudentMapper,
     @Resource
     private TeacherStudentMapper teacherStudentMapper;
 
-    @Resource(name = "studentServiceImpl")
+    @Resource
+    private StudentMapper studentMapper;
+    @Resource
+    private TeacherMapper teacherMapper;
+    @Resource
     private StudentService studentService;
 
     @Override
@@ -50,7 +57,15 @@ public class TeacherStudentServiceImpl extends ServiceImpl<TeacherStudentMapper,
         for (TeacherStudent teacherStudent : teacherStudents) {
             idList.add(teacherStudent.getStudentId());
         }
-        return studentService.listByIds(idList);
+        if (idList.size() > 0) {
+            List<Student> students = studentMapper.selectBatchIds(idList);
+            //隐藏密码
+            for (Student student : students) {
+                student.setPassword("******");
+            }
+            return students;
+        }
+        return null;
     }
 
     @Override
@@ -66,9 +81,37 @@ public class TeacherStudentServiceImpl extends ServiceImpl<TeacherStudentMapper,
             idList.add(teacherStudent.getStudentId());
         }
         IPage<Student> studentIPage = new Page<>(currentPage, pageSize);
-        studentIPage.setRecords(studentService.listByIds(idList));
+        if (idList.size() > 0) {
+            //隐藏密码
+            List<Student> students = studentMapper.selectBatchIds(idList);
+            for (Student student : students) {
+                student.setPassword("******");
+            }
+            studentIPage.setRecords(students);
+        }
         studentIPage.setTotal(iPage.getTotal());
         studentIPage.setPages(iPage.getPages());
         return studentIPage;
+    }
+
+    @Override
+    public List<Teacher> getTeacherListByStudentUsername(String username) {
+        Student student = studentService.queryByUserName(username);
+        if (student != null) {
+            List<TeacherStudent> teacherStudents = teacherStudentMapper.selectList(new LambdaQueryWrapper<TeacherStudent>().eq(TeacherStudent::getStudentId, student.getId()));
+            List<Integer> teacherId = new ArrayList<>();
+            for (TeacherStudent teacherStudent : teacherStudents) {
+                teacherId.add(teacherStudent.getTeacherId());
+            }
+            if (teacherId.size() > 0) {
+                List<Teacher> teachers = teacherMapper.selectBatchIds(teacherId);
+                //隐藏密码
+                for (Teacher teacher : teachers) {
+                    teacher.setPassword("******");
+                }
+                return teachers;
+            }
+        }
+        return null;
     }
 }

@@ -22,4 +22,5 @@ public interface TeacherService extends IService<Teacher> {
      */
     Teacher queryByUserName(String username);
 
+
 }

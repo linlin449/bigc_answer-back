@@ -3,10 +3,12 @@ package com.lin.bigc_answer.controller;
 
 import com.lin.bigc_answer.config.shiro.UserToken;
 import com.lin.bigc_answer.entity.user.Student;
+import com.lin.bigc_answer.entity.user.Teacher;
 import com.lin.bigc_answer.exception.ErrorCode;
 import com.lin.bigc_answer.service.CaptchaService;
 import com.lin.bigc_answer.service.StudentService;
 import com.lin.bigc_answer.service.StudentService;
+import com.lin.bigc_answer.service.TeacherStudentService;
 import com.lin.bigc_answer.service.impl.CaptchaServiceImpl;
 import com.lin.bigc_answer.utils.JWTUtil;
 import com.lin.bigc_answer.utils.R;
@@ -20,7 +22,9 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,7 +44,8 @@ public class StudentController {
 
     @Resource(name = "studentServiceImpl")
     private StudentService studentService;
-
+    @Resource(name = "teacherStudentServiceImpl")
+    private TeacherStudentService teacherStudentService;
 
     @PostMapping("/login")
     //学生登陆
@@ -54,6 +59,7 @@ public class StudentController {
         }
         try {
             if (!captchaService.checkVerCode(verKey, verCode)) {
+                captchaService.deleteVerCode(verKey);
                 return new R().fail("验证码错误", null);
             }
         } catch (RuntimeException e) {
@@ -83,8 +89,12 @@ public class StudentController {
         Subject subject = SecurityUtils.getSubject();
         if (subject.isPermitted(UserRole.STUDENT.name() + ":" + username)) {
             Student student = studentService.queryByUserName(username);
+            List<Teacher> teacherList = teacherStudentService.getTeacherListByStudentUsername(username);
             student.setPassword("******");
-            return new R().success("success", student);
+            Map<String, Object> map = new HashMap<>();
+            map.put("student", student);
+            map.put("teacherList", teacherList);
+            return new R().success("success", map);
         }
         return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
     }

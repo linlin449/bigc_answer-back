@@ -50,6 +50,7 @@ public class AdminController {
         }
         try {
             if (!captchaService.checkVerCode(verKey, verCode)) {
+                captchaService.deleteVerCode(verKey);
                 return new R().fail("验证码错误", null);
             }
         } catch (RuntimeException e) {

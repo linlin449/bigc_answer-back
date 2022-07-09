@@ -23,10 +23,36 @@ public interface QuestionService extends IService<Question> {
 
     /**
      * 根据章节ID分页获取所有题目
-     * @param chapterId 章节ID
+     * @param subjectId 章节ID
      * @param currentPage 当前页码
      * @param pageSize 页大小
      * @return IPage<Question>
      */
-    IPage<Question> getQuestionPageByChapter(int chapterId, int currentPage, int pageSize);
+    IPage<Question> getQuestionPageBySubject(int subjectId, int currentPage, int pageSize);
+
+    /**
+     * 获取学生答过的题目
+     * @param studentId 学生id
+     * @param currentPage 当前页码
+     * @param pageSize 页大小
+     * @return IPage<Question>
+     */
+    IPage<Question> getAnsweredPageByStudentId(Integer studentId, int currentPage, int pageSize);
+
+    /**
+     * 获取学生没有答过的题目
+     * @param studentId 学生id
+     * @param currentPage 当前页码
+     * @param pageSize 页大小
+     * @return IPage<Question>
+     */
+    IPage<Question> getUnansweredPageByStudentId(Integer studentId, int currentPage, int pageSize);
+
+    /**
+     * 判断学生是否答过某题
+     * @param questionId 题目id
+     * @param username 学生username
+     * @return 已作答返回真, 未作答或其他原因返回假
+     */
+    boolean isQuestionAnswered(Integer questionId, String username);
 }
