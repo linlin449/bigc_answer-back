@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -74,6 +75,17 @@ public class QuestionController {
             return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
         IPage<Question> questionIPage = questionService.getQuestionPageBySubject(Integer.parseInt(sid), Integer.parseInt(page), 10);
         return new R().success("success", questionIPage);
+    }
+
+    /**
+     * 根据章节ID获取题目列表
+     * @param cid 章节ID
+     */
+    @GetMapping("/chapter/{cid}")
+    private R getQuestionPageByChapter(@PathVariable("cid") String cid) {
+        if (!VerifyUtils.isStrNumber(cid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        List<Question> questionList = questionService.getQuestionListByChapterId(Integer.parseInt(cid));
+        return new R().success("success", questionList);
     }
 
     /**

@@ -133,4 +133,10 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         questionIPage.setSize(pageSize);
         return questionIPage;
     }
+
+    @Override
+    public List<Question> getQuestionListByChapterId(Integer chapterId) {
+        if (chapterId == null) return null;
+        return questionMapper.selectList(new LambdaQueryWrapper<Question>().eq(Question::getChapterId, chapterId));
+    }
 }

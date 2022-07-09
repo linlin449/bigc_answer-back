@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lin.bigc_answer.entity.question.Question;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -73,4 +75,11 @@ public interface QuestionService extends IService<Question> {
      * @return IPage<Question>
      */
     IPage<Question> getRightPageByStudentId(Integer studentId, int currentPage, int pageSize);
+
+    /**
+     * 根据章节ID获取题目列表
+     * @param chapterId 章节ID
+     * @return Question List
+     */
+    List<Question> getQuestionListByChapterId(Integer chapterId);
 }
