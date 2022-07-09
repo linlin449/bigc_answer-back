@@ -7,17 +7,13 @@ import com.lin.bigc_answer.entity.user.Teacher;
 import com.lin.bigc_answer.exception.ErrorCode;
 import com.lin.bigc_answer.service.CaptchaService;
 import com.lin.bigc_answer.service.StudentService;
-import com.lin.bigc_answer.service.StudentService;
 import com.lin.bigc_answer.service.TeacherStudentService;
-import com.lin.bigc_answer.service.impl.CaptchaServiceImpl;
 import com.lin.bigc_answer.utils.JWTUtil;
 import com.lin.bigc_answer.utils.R;
 import com.lin.bigc_answer.utils.UserRole;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
 

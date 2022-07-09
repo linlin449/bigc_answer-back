@@ -3,11 +3,9 @@ package com.lin.bigc_answer.controller;
 
 import com.lin.bigc_answer.config.shiro.UserToken;
 import com.lin.bigc_answer.entity.user.Admin;
-import com.lin.bigc_answer.entity.user.Teacher;
 import com.lin.bigc_answer.exception.ErrorCode;
 import com.lin.bigc_answer.service.AdminService;
 import com.lin.bigc_answer.service.CaptchaService;
-import com.lin.bigc_answer.service.TeacherService;
 import com.lin.bigc_answer.utils.JWTUtil;
 import com.lin.bigc_answer.utils.R;
 import com.lin.bigc_answer.utils.UserRole;

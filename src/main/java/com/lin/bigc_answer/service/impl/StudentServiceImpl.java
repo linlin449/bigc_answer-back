@@ -1,10 +1,10 @@
 package com.lin.bigc_answer.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lin.bigc_answer.entity.user.Student;
 import com.lin.bigc_answer.mapper.StudentMapper;
 import com.lin.bigc_answer.service.StudentService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

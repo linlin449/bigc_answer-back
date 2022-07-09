@@ -76,7 +76,7 @@ public class JWTUtil {//过期时间
     /**
      * 从token中获取username
      * @param token token字符串
-     * @return 成功返回token信息中的username, 失败返回null
+     * @return 成功返回token信息中的username, 失败或过期返回null
      */
     public static String getUserName(String token) {
         try {
@@ -92,7 +92,7 @@ public class JWTUtil {//过期时间
     /**
      * 从token中获取userrole
      * @param token token字符串
-     * @return 成功返回token信息中的userRole, 失败返回null
+     * @return 成功返回token信息中的userRole, 失败或过期返回null
      */
     public static UserRole getUserRole(String token) {
         try {

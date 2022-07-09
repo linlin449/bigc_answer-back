@@ -3,11 +3,10 @@ package com.lin.bigc_answer.entity.question;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-
-import java.io.Serializable;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
 
 /**
  * <p>
@@ -46,7 +45,6 @@ public class Question implements Serializable {
      * 对应的节
      */
     private Integer chapterId;
-
 
 
     private Integer subjectId;

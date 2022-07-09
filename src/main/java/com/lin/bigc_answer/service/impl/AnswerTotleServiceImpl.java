@@ -1,9 +1,9 @@
 package com.lin.bigc_answer.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lin.bigc_answer.entity.AnswerTotle;
 import com.lin.bigc_answer.mapper.AnswerTotleMapper;
 import com.lin.bigc_answer.service.AnswerTotleService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**

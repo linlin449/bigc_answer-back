@@ -7,11 +7,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lin.bigc_answer.entity.user.Student;
 import com.lin.bigc_answer.entity.user.Teacher;
 import com.lin.bigc_answer.entity.user.TeacherStudent;
-import com.lin.bigc_answer.entity.utils.StudentDTO;
-import com.lin.bigc_answer.mapper.StudentMapper;
-import com.lin.bigc_answer.mapper.TeacherMapper;
 import com.lin.bigc_answer.mapper.TeacherStudentMapper;
 import com.lin.bigc_answer.service.StudentService;
+import com.lin.bigc_answer.service.TeacherService;
 import com.lin.bigc_answer.service.TeacherStudentService;
 import org.springframework.stereotype.Service;
 
@@ -33,11 +31,9 @@ public class TeacherStudentServiceImpl extends ServiceImpl<TeacherStudentMapper,
     @Resource
     private TeacherStudentMapper teacherStudentMapper;
 
-    @Resource
-    private StudentMapper studentMapper;
-    @Resource
-    private TeacherMapper teacherMapper;
-    @Resource
+    @Resource(name = "teacherServiceImpl")
+    private TeacherService teacherService;
+    @Resource(name = "studentServiceImpl")
     private StudentService studentService;
 
     @Override
@@ -58,7 +54,7 @@ public class TeacherStudentServiceImpl extends ServiceImpl<TeacherStudentMapper,
             idList.add(teacherStudent.getStudentId());
         }
         if (idList.size() > 0) {
-            List<Student> students = studentMapper.selectBatchIds(idList);
+            List<Student> students = studentService.listByIds(idList);
             //隐藏密码
             for (Student student : students) {
                 student.setPassword("******");
@@ -83,7 +79,7 @@ public class TeacherStudentServiceImpl extends ServiceImpl<TeacherStudentMapper,
         IPage<Student> studentIPage = new Page<>(currentPage, pageSize);
         if (idList.size() > 0) {
             //隐藏密码
-            List<Student> students = studentMapper.selectBatchIds(idList);
+            List<Student> students = studentService.listByIds(idList);
             for (Student student : students) {
                 student.setPassword("******");
             }
@@ -104,7 +100,7 @@ public class TeacherStudentServiceImpl extends ServiceImpl<TeacherStudentMapper,
                 teacherId.add(teacherStudent.getTeacherId());
             }
             if (teacherId.size() > 0) {
-                List<Teacher> teachers = teacherMapper.selectBatchIds(teacherId);
+                List<Teacher> teachers = teacherService.listByIds(teacherId);
                 //隐藏密码
                 for (Teacher teacher : teachers) {
                     teacher.setPassword("******");

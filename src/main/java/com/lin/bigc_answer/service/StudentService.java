@@ -1,7 +1,7 @@
 package com.lin.bigc_answer.service;
 
-import com.lin.bigc_answer.entity.user.Student;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lin.bigc_answer.entity.user.Student;
 
 /**
  * <p>

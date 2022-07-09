@@ -4,7 +4,10 @@ import com.lin.bigc_answer.utils.R;
 import com.lin.bigc_answer.utils.RedisUtils;
 import com.wf.captcha.SpecCaptcha;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.HashMap;

@@ -139,5 +139,45 @@ public class QuestionController {
         }
         return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
     }
+
+    /**
+     * 获取某学生的错题,分页展示,页大小默认为10
+     * @param page 页码
+     * @param username 学生username
+     */
+    @GetMapping("/list/{page}/wrong/{username}")
+    private R getStudentWrongQuestionPage(@PathVariable("page") String page, @PathVariable("username") String username) {
+        if (!VerifyUtils.isStrNumber(page)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        Subject subject = SecurityUtils.getSubject();
+        Student student = studentService.queryByUserName(username);
+        //权限检验
+        if (subject.isPermitted(UserRole.STUDENT.name() + ":" + username)) {
+            if (student != null) {
+                return new R().success("success", questionService.getWrongPageByStudentId(student.getId(), Integer.parseInt(page), 10));
+            }
+            return new R().fail("学生不存在");
+        }
+        return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
+    }
+
+    /**
+     * 获取某学生答对的题目,分页展示,页大小默认为10
+     * @param page 页码
+     * @param username 学生username
+     */
+    @GetMapping("/list/{page}/right/{username}")
+    private R getStudentRightQuestionPage(@PathVariable("page") String page, @PathVariable("username") String username) {
+        if (!VerifyUtils.isStrNumber(page)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        Subject subject = SecurityUtils.getSubject();
+        Student student = studentService.queryByUserName(username);
+        //权限检验
+        if (subject.isPermitted(UserRole.STUDENT.name() + ":" + username)) {
+            if (student != null) {
+                return new R().success("success", questionService.getRightPageByStudentId(student.getId(), Integer.parseInt(page), 10));
+            }
+            return new R().fail("学生不存在");
+        }
+        return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
+    }
 }
 

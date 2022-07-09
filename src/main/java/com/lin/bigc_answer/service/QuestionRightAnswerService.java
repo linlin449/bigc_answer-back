@@ -1,7 +1,7 @@
 package com.lin.bigc_answer.service;
 
-import com.lin.bigc_answer.entity.question.QuestionRightAnswer;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lin.bigc_answer.entity.question.QuestionRightAnswer;
 
 /**
  * <p>
@@ -12,5 +12,4 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-07-06
  */
 public interface QuestionRightAnswerService extends IService<QuestionRightAnswer> {
-
 }
