@@ -24,7 +24,7 @@ public class Chapter implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    private byte[] name;
+    private String name;
 
     private Integer subjectId;
 
