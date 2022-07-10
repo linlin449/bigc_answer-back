@@ -1,14 +1,18 @@
 package com.lin.bigc_answer.controller;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lin.bigc_answer.config.shiro.UserToken;
+import com.lin.bigc_answer.entity.user.Student;
 import com.lin.bigc_answer.entity.user.Teacher;
 import com.lin.bigc_answer.exception.ErrorCode;
 import com.lin.bigc_answer.service.CaptchaService;
 import com.lin.bigc_answer.service.TeacherService;
+import com.lin.bigc_answer.service.TeacherStudentService;
 import com.lin.bigc_answer.utils.JWTUtil;
 import com.lin.bigc_answer.utils.R;
 import com.lin.bigc_answer.utils.UserRole;
+import com.lin.bigc_answer.utils.VerifyUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -35,6 +39,9 @@ public class TeacherController {
 
     @Resource(name = "captchaServiceImpl")
     private CaptchaService captchaService;
+
+    @Resource(name = "teacherStudentServiceImpl")
+    private TeacherStudentService teacherStudentService;
 
     @PostMapping("/login")
     //老师登陆
@@ -73,13 +80,37 @@ public class TeacherController {
         }
     }
 
+    /**
+     * 根据用户名获取老师信息
+     * @param username 老师username
+     */
     @GetMapping("/info/{username}")
-    public R getStudentInfo(@PathVariable("username") String username) {
+    public R getTeacherInfo(@PathVariable("username") String username) {
         Subject subject = SecurityUtils.getSubject();
         if (subject.isPermitted(UserRole.TEACHER.name() + ":" + username)) {
             Teacher teacher = teacherService.queryByUserName(username);
             teacher.setPassword("******");
             return new R().success("success", teacher);
+        }
+        return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
+    }
+
+    /**
+     * 分页获取老师的学生列表,默认页大小为10
+     * @param username 老师username
+     * @param page 页码
+     */
+    @GetMapping("/students/{username}/list/{page}")
+    public R getStudentList(@PathVariable("username") String username, @PathVariable("page") String page) {
+        if (!VerifyUtils.isStrNumber(page)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isPermitted(UserRole.TEACHER.name() + ":" + username)) {
+            Teacher teacher = teacherService.queryByUserName(username);
+            if (teacher != null) {
+                IPage<Student> studentIPage = teacherStudentService.getStudentPageByTeacherId(teacher.getId(), Integer.parseInt(page), 10);
+                return new R().success("success", studentIPage);
+            }
+            return new R().fail("老师不存在");
         }
         return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
     }

@@ -20,6 +20,7 @@ import org.apache.shiro.subject.PrincipalCollection;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j(topic = "Shiro Realm")
 public class UserRealm extends AuthorizingRealm {
@@ -60,6 +61,10 @@ public class UserRealm extends AuthorizingRealm {
             simpleAuthorizationInfo.addStringPermission(UserRole.TEACHER.name() + ":*");
         }
         log.info("身份授权 " + primaryPrincipal);
+        Set<String> stringPermissions = simpleAuthorizationInfo.getStringPermissions();
+        for (String stringPermission : stringPermissions) {
+            log.info("拥有权限:" + stringPermission);
+        }
         return simpleAuthorizationInfo;
     }
 

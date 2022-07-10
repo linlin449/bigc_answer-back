@@ -18,6 +18,4 @@ public interface TeacherService extends IService<Teacher> {
      * @return 查询成功返回Teacher实体类, 查询失败返回null
      */
     Teacher queryByUserName(String username);
-
-
 }
