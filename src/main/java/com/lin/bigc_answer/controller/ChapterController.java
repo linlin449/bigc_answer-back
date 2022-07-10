@@ -33,6 +33,11 @@ public class ChapterController {
     ChapterService chapterService;
     @Resource(name = "subjectServiceImpl")
     SubjectService subjectService;
+
+    /**
+     * 通过subject ID 获取章节列表
+     * @param sid subject ID
+     */
     @GetMapping("/subject/{sid}")
     public R getChapterBySubjectId(@PathVariable("sid") String sid) {
         if (!VerifyUtils.isStrNumber(sid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
@@ -44,9 +49,9 @@ public class ChapterController {
      * 封装一个subject和对应的章节 在一起的数组
      * @return R
      */
-    @GetMapping("/")
+    @GetMapping("")
     public R getAllChapter(){
-        List<QuestionDto> questionDtos=new ArrayList<QuestionDto>();
+        List<QuestionDto> questionDtos= new ArrayList<>();
         List<Subject> subjects=subjectService.list();
         for(Subject subject : subjects){
             List<Chapter> chapters = chapterService.getListBySubjectId(subject.getId());
