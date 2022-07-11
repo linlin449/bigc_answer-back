@@ -29,7 +29,7 @@ public class QuestionRightAnswerController {
     /**
      * 添加正确答案,需要管理员权限
      */
-    @RequiresRoles("ADMIN")
+    @RequiresRoles({"ADMIN", "TEACHER"})
     @PostMapping("/add")
     public R addRightAnswer(@RequestBody QuestionRightAnswer questionRightAnswer) {
         if (questionRightAnswerService.save(questionRightAnswer)) {

@@ -2,11 +2,16 @@ package com.lin.bigc_answer.controller;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.lin.bigc_answer.entity.AnswerDetail;
 import com.lin.bigc_answer.entity.question.Question;
+import com.lin.bigc_answer.entity.question.QuestionRightAnswer;
 import com.lin.bigc_answer.entity.user.Student;
 import com.lin.bigc_answer.exception.ErrorCode;
+import com.lin.bigc_answer.service.AnswerDetailService;
+import com.lin.bigc_answer.service.QuestionRightAnswerService;
 import com.lin.bigc_answer.service.QuestionService;
 import com.lin.bigc_answer.service.StudentService;
+import com.lin.bigc_answer.utils.JWTUtil;
 import com.lin.bigc_answer.utils.R;
 import com.lin.bigc_answer.utils.UserRole;
 import com.lin.bigc_answer.utils.VerifyUtils;
@@ -16,6 +21,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +41,10 @@ public class QuestionController {
     QuestionService questionService;
     @Resource(name = "studentServiceImpl")
     StudentService studentService;
-
+    @Resource(name = "answerDetailServiceImpl")
+    AnswerDetailService answerDetailService;
+    @Resource(name = "questionRightAnswerServiceImpl")
+    QuestionRightAnswerService questionRightAnswerService;
 
     /**
      * 根据页码获取题目,页大小默认为10
@@ -43,7 +52,7 @@ public class QuestionController {
      */
     @GetMapping("/list/{page}")
     public R getQuestionByPage(@PathVariable("page") String page) {
-        if (!VerifyUtils.isStrNumber(page)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        if (!VerifyUtils.isObjectNumber(page)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
         IPage<Question> questionPage = questionService.getQuestionPage(Integer.parseInt(page), 10);
         return new R().success("success", questionPage);
     }
@@ -54,7 +63,7 @@ public class QuestionController {
      */
     @GetMapping("/{id}")
     public R getQuestionPage(@PathVariable("id") String id) {
-        if (!VerifyUtils.isStrNumber(id)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        if (!VerifyUtils.isObjectNumber(id)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
         Question question = questionService.getById(id);
         if (question != null) {
             return new R().success("success", question);
@@ -69,7 +78,7 @@ public class QuestionController {
      */
     @GetMapping("/list/{page}/subject/{sid}")
     public R getQuestionPageByChapter(@PathVariable("page") String page, @PathVariable("sid") String sid) {
-        if (!VerifyUtils.isStrNumber(page) || !VerifyUtils.isStrNumber(sid))
+        if (!VerifyUtils.isObjectNumber(page) || !VerifyUtils.isObjectNumber(sid))
             return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
         IPage<Question> questionIPage = questionService.getQuestionPageBySubject(Integer.parseInt(sid), Integer.parseInt(page), 10);
         return new R().success("success", questionIPage);
@@ -81,7 +90,7 @@ public class QuestionController {
      */
     @GetMapping("/chapter/{cid}")
     public R getQuestionPageByChapter(@PathVariable("cid") String cid) {
-        if (!VerifyUtils.isStrNumber(cid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        if (!VerifyUtils.isObjectNumber(cid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
         List<Question> questionList = questionService.getQuestionListByChapterId(Integer.parseInt(cid));
         return new R().success("success", questionList);
     }
@@ -93,7 +102,7 @@ public class QuestionController {
      */
     @GetMapping("/list/{page}/answered/{username}")
     public R getAnsweredQuestionPage(@PathVariable("page") String page, @PathVariable("username") String username) {
-        if (!VerifyUtils.isStrNumber(page)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        if (!VerifyUtils.isObjectNumber(page)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
         Subject subject = SecurityUtils.getSubject();
         //权限检验
         if (subject.isPermitted(UserRole.STUDENT.name() + ":" + username)) {
@@ -113,7 +122,7 @@ public class QuestionController {
      */
     @GetMapping("/list/{page}/unanswered/{username}")
     public R getUnansweredQuestionPage(@PathVariable("page") String page, @PathVariable("username") String username) {
-        if (!VerifyUtils.isStrNumber(page)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        if (!VerifyUtils.isObjectNumber(page)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
         Subject subject = SecurityUtils.getSubject();
         //权限检验
         if (subject.isPermitted(UserRole.STUDENT.name() + ":" + username)) {
@@ -127,13 +136,13 @@ public class QuestionController {
     }
 
     /**
-     * 检查学生某一题的答题状态(未作答 or 已作答)
+     * 检查学生某一题的答题状态(答对true 答错false 其他null)
      * @param qid 问题ID
      * @param username 学生username
      */
     @GetMapping("/check/{qid}/username/{username}")
     public R getStudentQuestionStatus(@PathVariable("qid") String qid, @PathVariable("username") String username) {
-        if (!VerifyUtils.isStrNumber(qid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        if (!VerifyUtils.isObjectNumber(qid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
         Subject subject = SecurityUtils.getSubject();
         //权限检验
         if (subject.isPermitted(UserRole.STUDENT.name() + ":" + username)) {
@@ -142,7 +151,28 @@ public class QuestionController {
                 Map<String, Object> map = new HashMap<>();
                 map.put("questionID", qid);
                 map.put("username", username);
-                map.put("answered", questionService.isQuestionAnswered(Integer.valueOf(qid), username) ? 1 : 0);
+                map.put("answerRight", questionService.isQuestionAnswerRight(Integer.valueOf(qid), username));
+                return new R().success("success", map);
+            }
+            return new R().fail("学生不存在");
+        }
+        return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
+    }
+
+    /**
+     * 检查学生一些题目的答题状态(答对true 答错false 其他null)
+     * @param questionList 问题ID列表
+     * @param username 学生username
+     */
+    @GetMapping("/check/username/{username}")
+    public R getStudentQuestionStatusList(@RequestParam("questionIDs") List<Integer> questionList, @PathVariable("username") String username) {
+        Subject subject = SecurityUtils.getSubject();
+        //权限检验
+        if (subject.isPermitted(UserRole.STUDENT.name() + ":" + username)) {
+            Student student = studentService.queryByUserName(username);
+            if (student != null) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("answerRight", questionService.isQuestionListRight(questionList, username));
                 return new R().success("success", map);
             }
             return new R().fail("学生不存在");
@@ -157,7 +187,7 @@ public class QuestionController {
      */
     @GetMapping("/list/{page}/wrong/{username}")
     public R getStudentWrongQuestionPage(@PathVariable("page") String page, @PathVariable("username") String username) {
-        if (!VerifyUtils.isStrNumber(page)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        if (!VerifyUtils.isObjectNumber(page)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
         Subject subject = SecurityUtils.getSubject();
         Student student = studentService.queryByUserName(username);
         //权限检验
@@ -177,7 +207,7 @@ public class QuestionController {
      */
     @GetMapping("/list/{page}/right/{username}")
     public R getStudentRightQuestionPage(@PathVariable("page") String page, @PathVariable("username") String username) {
-        if (!VerifyUtils.isStrNumber(page)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        if (!VerifyUtils.isObjectNumber(page)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
         Subject subject = SecurityUtils.getSubject();
         Student student = studentService.queryByUserName(username);
         //权限检验
@@ -193,7 +223,7 @@ public class QuestionController {
     /**
      *添加题目,需要管理员权限
      */
-    @RequiresRoles("ADMIN")
+    @RequiresRoles({"ADMIN", "TEACHER"})
     @PostMapping("/add")
     public R addQuestion(@RequestBody Question question) {
         Integer questionId = questionService.addQuestion(question);
@@ -203,5 +233,46 @@ public class QuestionController {
         return new R().fail("添加失败!");
     }
 
+
+    /**
+     * 答题
+     * @param params 请求数据需要携带 answer 和 questionID
+     */
+    @PostMapping("/answer")
+    public R answerQuestion(@RequestBody Map<String, String> params, HttpServletRequest request) {
+        String answer = params.get("answer");
+        String questionID = params.get("questionID");
+        if (answer == null || questionID == null || !VerifyUtils.isObjectNumber(questionID))
+            return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        Subject subject = SecurityUtils.getSubject();
+        String token = request.getHeader("X-Token");
+        String userName = JWTUtil.getUserName(token);
+        Student student = studentService.queryByUserName(userName);
+        if (subject.isPermitted(UserRole.STUDENT + ":" + userName)) {
+            Question question = questionService.getById(questionID);
+            QuestionRightAnswer questionRightAnswer = questionRightAnswerService.getById(questionID);
+            if (answerDetailService.getByQuestionIdAndStudentId(Integer.valueOf(questionID), student.getId()) != null) {
+                return new R().fail("抱歉,该题您已经答过,无法重复答题");
+            }
+            if (question != null && questionRightAnswer != null) {
+                Map<String, Object> result = new HashMap<>();
+                result.put("rightAnswer", questionRightAnswer.getRightAnswer());
+                result.put("analysis", questionRightAnswer.getAnalysis());
+                AnswerDetail answerDetail = new AnswerDetail();
+                answerDetail.setQuestionId(Integer.valueOf(questionID));
+                answerDetail.setStudentId(student.getId());
+                if (questionRightAnswer.getRightAnswer().equals(answer)) {
+                    result.put("result", true);
+                    answerDetail.setIsRight(1);
+                }
+                result.put("result", false);
+                answerDetail.setIsRight(0);
+                answerDetailService.save(answerDetail);
+                return new R().success("success", result);
+            }
+            return new R().fail("题目出现异常");
+        }
+        return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
+    }
 }
 

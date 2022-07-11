@@ -87,13 +87,28 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     }
 
     @Override
-    public boolean isQuestionAnswered(Integer questionId, String username) {
+    public Boolean isQuestionAnswerRight(Integer questionId, String username) {
         Student student = studentService.queryByUserName(username);
         if (student != null) {
             AnswerDetail answerDetail = answerDetailService.getByQuestionIdAndStudentId(questionId, student.getId());
             return answerDetail != null;
         }
-        return false;
+        return null;
+    }
+
+    @Override
+    public List<Boolean> isQuestionListRight(List<Integer> questionIds, String username) {
+        List<Boolean> result = new ArrayList<>();
+        Student student = studentService.queryByUserName(username);
+        for (Integer questionId : questionIds) {
+            if (questionId != null && student != null) {
+                AnswerDetail answerDetail = answerDetailService.getByQuestionIdAndStudentId(questionId, student.getId());
+                result.add(answerDetail != null);
+                continue;
+            }
+            result.add(null);
+        }
+        return result;
     }
 
     @Override

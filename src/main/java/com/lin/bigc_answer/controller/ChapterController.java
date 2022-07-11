@@ -40,7 +40,7 @@ public class ChapterController {
      */
     @GetMapping("/subject/{sid}")
     public R getChapterBySubjectId(@PathVariable("sid") String sid) {
-        if (!VerifyUtils.isStrNumber(sid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        if (!VerifyUtils.isObjectNumber(sid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
         List<Chapter> listBySubjectId = chapterService.getListBySubjectId(Integer.valueOf(sid));
         return new R().success("success", listBySubjectId);
     }

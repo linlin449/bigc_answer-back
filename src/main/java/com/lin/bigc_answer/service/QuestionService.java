@@ -51,12 +51,19 @@ public interface QuestionService extends IService<Question> {
     IPage<Question> getUnansweredPageByStudentId(Integer studentId, int currentPage, int pageSize);
 
     /**
-     * 判断学生是否答过某题
+     * 判断学生某题是否答对
      * @param questionId 题目id
      * @param username 学生username
-     * @return 已作答返回真, 未作答或其他原因返回假
+     * @return 已作答返回真, 未作答返回假,其他原因返回null
      */
-    boolean isQuestionAnswered(Integer questionId, String username);
+    Boolean isQuestionAnswerRight(Integer questionId, String username);
+
+    /**
+     * 查询多个学生多个题目是否答对
+     * @param username 学生username
+     * @return Boolean集合, 若答对则为真, 答错为假, 题目不存在或其他原因则为null
+     */
+    List<Boolean> isQuestionListRight(List<Integer> questionIds, String username);
 
     /**
      * 获取某学生的错题,分页展示

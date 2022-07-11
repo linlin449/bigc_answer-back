@@ -63,9 +63,9 @@ public class TeacherController {
         }
         Subject subject = SecurityUtils.getSubject();
         UserToken userToken = new UserToken(username, password, UserRole.TEACHER);
+        captchaService.deleteVerCode(verKey);
         try {
             subject.login(userToken);
-            captchaService.deleteVerCode(verKey);
             //登陆成功,下发token
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("token", JWTUtil.createToken(username, UserRole.TEACHER));
@@ -102,7 +102,7 @@ public class TeacherController {
      */
     @GetMapping("/students/{username}/list/{page}")
     public R getStudentList(@PathVariable("username") String username, @PathVariable("page") String page) {
-        if (!VerifyUtils.isStrNumber(page)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        if (!VerifyUtils.isObjectNumber(page)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
         Subject subject = SecurityUtils.getSubject();
         if (subject.isPermitted(UserRole.TEACHER.name() + ":" + username)) {
             Teacher teacher = teacherService.queryByUserName(username);

@@ -48,6 +48,7 @@ public class UserRealm extends AuthorizingRealm {
             //授予老师的学生拥有的所有权限
             Teacher teacher = teacherService.queryByUserName(split[1]);
             if (teacher != null) {
+                simpleAuthorizationInfo.addRole(UserRole.TEACHER.name());
                 simpleAuthorizationInfo.addStringPermission(primaryPrincipal);
                 List<Student> studentListByTeacherId = teacherStudentService.getStudentListByTeacherId(teacher.getId());
                 for (Student student : studentListByTeacherId) {
@@ -56,6 +57,7 @@ public class UserRealm extends AuthorizingRealm {
             }
         } else if (split[0].equals(UserRole.ADMIN.name())) {
             simpleAuthorizationInfo.addRole(UserRole.ADMIN.name());
+            simpleAuthorizationInfo.addRole(UserRole.TEACHER.name());
             //授予所有教师权限与学生权限
             simpleAuthorizationInfo.addStringPermission(UserRole.STUDENT.name() + ":*");
             simpleAuthorizationInfo.addStringPermission(UserRole.TEACHER.name() + ":*");
