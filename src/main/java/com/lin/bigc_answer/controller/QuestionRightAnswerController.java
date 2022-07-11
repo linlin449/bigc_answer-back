@@ -1,8 +1,16 @@
 package com.lin.bigc_answer.controller;
 
 
+import com.lin.bigc_answer.entity.question.QuestionRightAnswer;
+import com.lin.bigc_answer.service.QuestionRightAnswerService;
+import com.lin.bigc_answer.utils.R;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 /**
  * <p>
@@ -13,8 +21,21 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2022-07-06
  */
 @RestController
-@RequestMapping("/lin.bigc_answer/question-right-answer")
+@RequestMapping("/rightanswer")
 public class QuestionRightAnswerController {
+    @Resource(name = "questionRightAnswerServiceImpl")
+    QuestionRightAnswerService questionRightAnswerService;
 
+    /**
+     * 添加正确答案,需要管理员权限
+     */
+    @RequiresRoles("ADMIN")
+    @PostMapping("/add")
+    public R addRightAnswer(@RequestBody QuestionRightAnswer questionRightAnswer) {
+        if (questionRightAnswerService.save(questionRightAnswer)) {
+            return new R().success("添加成功");
+        }
+        return new R().fail("添加失败");
+    }
 }
 

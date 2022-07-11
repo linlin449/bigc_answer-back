@@ -1,5 +1,6 @@
 package com.lin.bigc_answer.config.shiro;
 
+import com.lin.bigc_answer.utils.JWTUtil;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -28,8 +29,12 @@ public class ShiroConfig {
         filterMap.put("authc-cors", new FormAuthenticationFilter() {
             @Override
             protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+                //验证Token
+                HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+                String header = httpServletRequest.getHeader("X-Token");
+                if (JWTUtil.getUserName(header) == null) return false;
                 //放行OPTIONS
-                if (((HttpServletRequest) request).getMethod().equalsIgnoreCase("OPTIONS")) {
+                if (httpServletRequest.getMethod().equalsIgnoreCase("OPTIONS")) {
                     return true;
                 }
                 return super.isAccessAllowed(request, response, mappedValue);

@@ -82,4 +82,11 @@ public interface QuestionService extends IService<Question> {
      * @return Question List
      */
     List<Question> getQuestionListByChapterId(Integer chapterId);
+
+    /**
+     * 添加问题
+     * @param question 问题实体类
+     * @return 增加成功则返回主键ID, 失败返回null
+     */
+    Integer addQuestion(Question question);
 }

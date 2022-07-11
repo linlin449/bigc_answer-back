@@ -86,7 +86,7 @@ public class StudentController {
         if (subject.isPermitted(UserRole.STUDENT.name() + ":" + username)) {
             Student student = studentService.queryByUserName(username);
             List<Teacher> teacherList = teacherStudentService.getTeacherListByStudentUsername(username);
-            student.setPassword("******");
+            student.hidePassword();
             Map<String, Object> map = new HashMap<>();
             map.put("student", student);
             map.put("teacherList", teacherList);

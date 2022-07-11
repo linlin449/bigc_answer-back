@@ -30,5 +30,7 @@ public class Admin implements Serializable {
 
     private Integer role;
 
-
+    public void hidePassword() {
+        this.password = "******";
+    }
 }

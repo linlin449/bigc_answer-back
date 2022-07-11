@@ -57,7 +57,7 @@ public class TeacherStudentServiceImpl extends ServiceImpl<TeacherStudentMapper,
             List<Student> students = studentService.listByIds(idList);
             //隐藏密码
             for (Student student : students) {
-                student.setPassword("******");
+                student.hidePassword();
             }
             return students;
         }
@@ -81,7 +81,7 @@ public class TeacherStudentServiceImpl extends ServiceImpl<TeacherStudentMapper,
             //隐藏密码
             List<Student> students = studentService.listByIds(idList);
             for (Student student : students) {
-                student.setPassword("******");
+                student.hidePassword();
             }
             studentIPage.setRecords(students);
         }
@@ -103,7 +103,7 @@ public class TeacherStudentServiceImpl extends ServiceImpl<TeacherStudentMapper,
                 List<Teacher> teachers = teacherService.listByIds(teacherId);
                 //隐藏密码
                 for (Teacher teacher : teachers) {
-                    teacher.setPassword("******");
+                    teacher.hidePassword();
                 }
                 return teachers;
             }

@@ -40,7 +40,7 @@ public class CaptchaController {
     //TODO 此接口用于开发,生产环境应删除该接口
     @Deprecated
     @GetMapping("/value/{key}")
-    private R getValue(@PathVariable("key") String key) {
+    public R getValue(@PathVariable("key") String key) {
         log.warn("用于开发环境的接口正在被使用,如为生产环境,请尽快删除该接口");
         if (redisUtil.hasKey("captcha:" + key)) {
             return new R().success(redisUtil.get("captcha:" + key));

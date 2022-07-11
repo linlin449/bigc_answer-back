@@ -78,7 +78,7 @@ public class AdminController {
         Subject subject = SecurityUtils.getSubject();
         if (subject.isPermitted(UserRole.ADMIN.name() + ":" + username)) {
             Admin admin = adminService.queryByUserName(username);
-            admin.setPassword("******");
+            admin.hidePassword();
             return new R().success("success", admin);
         }
         return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);

@@ -139,4 +139,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         if (chapterId == null) return null;
         return questionMapper.selectList(new LambdaQueryWrapper<Question>().eq(Question::getChapterId, chapterId));
     }
+
+    @Override
+    public Integer addQuestion(Question question) {
+        return questionMapper.insert(question) == 1 ? question.getId() : null;
+    }
 }

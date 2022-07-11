@@ -50,17 +50,17 @@ public class ChapterController {
      * @return R
      */
     @GetMapping("")
-    public R getAllChapter(){
-        List<QuestionDto> questionDtos= new ArrayList<>();
-        List<Subject> subjects=subjectService.list();
-        for(Subject subject : subjects){
+    public R getAllChapter() {
+        List<QuestionDto> questionDtos = new ArrayList<>();
+        List<Subject> subjects = subjectService.list();
+        for (Subject subject : subjects) {
             List<Chapter> chapters = chapterService.getListBySubjectId(subject.getId());
             QuestionDto questionDto = new QuestionDto();
             questionDto.setSubjectname(subject.getName());
             questionDto.setChapters(chapters);
             questionDtos.add(questionDto);
         }
-        return new R().success("success",questionDtos);
+        return new R().success("success", questionDtos);
     }
 }
 

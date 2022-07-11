@@ -89,7 +89,7 @@ public class TeacherController {
         Subject subject = SecurityUtils.getSubject();
         if (subject.isPermitted(UserRole.TEACHER.name() + ":" + username)) {
             Teacher teacher = teacherService.queryByUserName(username);
-            teacher.setPassword("******");
+            teacher.hidePassword();
             return new R().success("success", teacher);
         }
         return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);

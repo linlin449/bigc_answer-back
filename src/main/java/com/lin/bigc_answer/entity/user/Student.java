@@ -51,5 +51,7 @@ public class Student implements Serializable {
 
     private Integer role;
 
-
+    public void hidePassword() {
+        this.password = "******";
+    }
 }

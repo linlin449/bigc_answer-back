@@ -39,5 +39,7 @@ public class Teacher implements Serializable {
      */
     private Integer role;
 
-
+    public void hidePassword() {
+        this.password = "******";
+    }
 }

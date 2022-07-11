@@ -1,18 +1,14 @@
 package com.lin.bigc_answer;
 
 import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
 import com.baomidou.mybatisplus.generator.config.GlobalConfig;
 import com.baomidou.mybatisplus.generator.config.PackageConfig;
 import com.baomidou.mybatisplus.generator.config.StrategyConfig;
-import com.baomidou.mybatisplus.generator.config.po.TableFill;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
-
-import java.util.ArrayList;
 
 public class GeneratorCodeAllConfig {
     public static void main(String[] args) {
@@ -25,7 +21,7 @@ public class GeneratorCodeAllConfig {
         gc.setAuthor("lin");
         gc.setOpen(false); //生成后是否打开资源管理器
         gc.setFileOverride(false); //重新生成时文件是否覆盖
-        gc.setServiceName("%sService");	//去掉Service接口的首字母I
+        gc.setServiceName("%sService");    //去掉Service接口的首字母I
         gc.setIdType(IdType.AUTO); //主键策略
         gc.setDateType(DateType.ONLY_DATE);//定义生成的实体类中日期类型
 
