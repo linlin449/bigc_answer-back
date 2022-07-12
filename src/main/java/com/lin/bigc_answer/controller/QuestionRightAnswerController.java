@@ -24,10 +24,10 @@ import javax.annotation.Resource;
 @RequestMapping("/rightanswer")
 public class QuestionRightAnswerController {
     @Resource(name = "questionRightAnswerServiceImpl")
-    QuestionRightAnswerService questionRightAnswerService;
+    private QuestionRightAnswerService questionRightAnswerService;
 
     /**
-     * 添加正确答案,需要管理员权限
+     * 添加正确答案,需要管理员和老师权限
      */
     @RequiresRoles({"ADMIN", "TEACHER"})
     @PostMapping("/add")

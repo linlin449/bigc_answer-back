@@ -23,7 +23,7 @@ import javax.annotation.Resource;
 public class StudentFalseQuestionServiceImpl extends ServiceImpl<StudentFalseQuestionMapper, StudentFalseQuestion> implements StudentFalseQuestionService {
 
     @Resource
-    StudentFalseQuestionMapper studentFalseQuestionMapper;
+    private StudentFalseQuestionMapper studentFalseQuestionMapper;
 
     @Override
     public IPage<StudentFalseQuestion> selectPageByStudentId(Integer studentId, int currentPage, int pageSize) {

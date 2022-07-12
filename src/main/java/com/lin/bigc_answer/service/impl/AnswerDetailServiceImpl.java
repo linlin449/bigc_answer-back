@@ -23,7 +23,7 @@ import javax.annotation.Resource;
 public class AnswerDetailServiceImpl extends ServiceImpl<AnswerDetailMapper, AnswerDetail> implements AnswerDetailService {
 
     @Resource
-    AnswerDetailMapper answerDetailMapper;
+    private AnswerDetailMapper answerDetailMapper;
 
     @Override
     public IPage<AnswerDetail> selectPageByStudentId(Integer studentId, int currentPage, int pageSize) {

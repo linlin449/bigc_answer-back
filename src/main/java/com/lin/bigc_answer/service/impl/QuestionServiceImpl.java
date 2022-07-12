@@ -28,11 +28,11 @@ import java.util.List;
 @Service
 public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> implements QuestionService {
     @Resource
-    QuestionMapper questionMapper;
+    private QuestionMapper questionMapper;
     @Resource(name = "answerDetailServiceImpl")
-    AnswerDetailService answerDetailService;
+    private AnswerDetailService answerDetailService;
     @Resource(name = "studentServiceImpl")
-    StudentService studentService;
+    private StudentService studentService;
 
     @Override
     public IPage<Question> getQuestionPage(int currentPage, int pageSize) {

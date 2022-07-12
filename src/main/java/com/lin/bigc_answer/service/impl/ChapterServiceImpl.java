@@ -22,7 +22,7 @@ import java.util.List;
 public class ChapterServiceImpl extends ServiceImpl<ChapterMapper, Chapter> implements ChapterService {
 
     @Resource
-    ChapterMapper chapterMapper;
+    private ChapterMapper chapterMapper;
 
     @Override
     public List<Chapter> getListBySubjectId(Integer subjectId) {

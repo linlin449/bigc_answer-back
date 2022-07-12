@@ -30,9 +30,9 @@ import java.util.List;
 @RequestMapping("/chapter")
 public class ChapterController {
     @Resource(name = "chapterServiceImpl")
-    ChapterService chapterService;
+    private ChapterService chapterService;
     @Resource(name = "subjectServiceImpl")
-    SubjectService subjectService;
+    private SubjectService subjectService;
 
     /**
      * 通过subject ID 获取章节列表

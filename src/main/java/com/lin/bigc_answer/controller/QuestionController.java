@@ -38,13 +38,13 @@ import java.util.Map;
 @RequestMapping("/question")
 public class QuestionController {
     @Resource(name = "questionServiceImpl")
-    QuestionService questionService;
+    private QuestionService questionService;
     @Resource(name = "studentServiceImpl")
-    StudentService studentService;
+    private StudentService studentService;
     @Resource(name = "answerDetailServiceImpl")
-    AnswerDetailService answerDetailService;
+    private AnswerDetailService answerDetailService;
     @Resource(name = "questionRightAnswerServiceImpl")
-    QuestionRightAnswerService questionRightAnswerService;
+    private QuestionRightAnswerService questionRightAnswerService;
 
     /**
      * 根据页码获取题目,页大小默认为10
@@ -221,7 +221,7 @@ public class QuestionController {
     }
 
     /**
-     *添加题目,需要管理员权限
+     *添加题目,需要管理员和老师权限
      */
     @RequiresRoles({"ADMIN", "TEACHER"})
     @PostMapping("/add")

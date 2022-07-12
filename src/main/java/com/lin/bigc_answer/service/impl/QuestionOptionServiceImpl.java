@@ -6,6 +6,10 @@ import com.lin.bigc_answer.mapper.QuestionOptionMapper;
 import com.lin.bigc_answer.service.QuestionOptionService;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * <p>
  *  服务实现类
@@ -17,4 +21,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class QuestionOptionServiceImpl extends ServiceImpl<QuestionOptionMapper, QuestionOption> implements QuestionOptionService {
 
+    @Resource
+    private QuestionOptionMapper questionOptionMapper;
+
+    @Override
+    public List<QuestionOption> getByQuestionIds(List<Integer> questionIds) {
+        List<QuestionOption> questionOptions = new LinkedList<>();
+        for (Integer questionId : questionIds) {
+            if (questionId != null) {
+                questionOptions.add(questionOptionMapper.selectById(questionId));
+                continue;
+            }
+            questionOptions.add(null);
+        }
+        return questionOptions;
+    }
 }
