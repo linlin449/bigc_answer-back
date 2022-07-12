@@ -86,7 +86,7 @@ public interface QuestionService extends IService<Question> {
     /**
      * 根据章节ID获取题目列表
      * @param chapterId 章节ID
-     * @return Question List
+     * @return Question List,若章节不存在则返回null
      */
     List<Question> getQuestionListByChapterId(Integer chapterId);
 

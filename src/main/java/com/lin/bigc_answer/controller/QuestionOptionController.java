@@ -31,7 +31,7 @@ public class QuestionOptionController {
     /**
      * 添加选项,需要管理员和老师权限
      */
-    @RequiresRoles({"ADMIN", "TEACHER"})
+    @RequiresRoles("TEACHER")
     @PostMapping("/add")
     public R addOption(@RequestBody QuestionOption questionOption) {
         if (questionOptionService.save(questionOption)) {

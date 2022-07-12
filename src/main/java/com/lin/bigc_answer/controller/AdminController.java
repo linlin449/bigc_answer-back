@@ -12,11 +12,13 @@ import com.lin.bigc_answer.utils.UserRole;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,7 +39,7 @@ public class AdminController {
     private CaptchaService captchaService;
 
     @PostMapping("/login")
-    //老师登陆
+    //管理员登陆
     public R userLogin(@RequestBody Map<String, String> params) {
         String username = params.get("username");
         String password = params.get("password");
@@ -73,15 +75,30 @@ public class AdminController {
         }
     }
 
+    /**
+     * 获取管理员详细信息
+     * @param username 管理员username
+     */
+    @RequiresRoles("ADMIN")
     @GetMapping("/info/{username}")
-    public R getStudentInfo(@PathVariable("username") String username) {
+    public R getAdminInfo(@PathVariable("username") String username) {
         Subject subject = SecurityUtils.getSubject();
-        if (subject.isPermitted(UserRole.ADMIN.name() + ":" + username)) {
-            Admin admin = adminService.queryByUserName(username);
+        Admin admin = adminService.queryByUserName(username);
+        admin.hidePassword();
+        return new R().success("success", admin);
+    }
+
+    /**
+     * 获取管理员列表
+     */
+    @RequiresRoles("ADMIN")
+    @GetMapping("/list")
+    public R getAdminList() {
+        List<Admin> adminList = adminService.list();
+        for (Admin admin : adminList) {
             admin.hidePassword();
-            return new R().success("success", admin);
         }
-        return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
+        return new R().success("success", adminList);
     }
 }
 

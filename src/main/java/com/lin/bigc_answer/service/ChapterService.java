@@ -17,7 +17,7 @@ public interface ChapterService extends IService<Chapter> {
     /**
      * 通过subject ID 获取章节列表
      * @param subjectId subjectID
-     * @return 章节list
+     * @return 章节list, 若课程不存在则返回null
      */
     List<Chapter> getListBySubjectId(Integer subjectId);
 }

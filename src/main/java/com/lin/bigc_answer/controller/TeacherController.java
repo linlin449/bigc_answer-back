@@ -16,11 +16,13 @@ import com.lin.bigc_answer.utils.VerifyUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -113,6 +115,19 @@ public class TeacherController {
             return new R().fail("老师不存在");
         }
         return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
+    }
+
+    /**
+     * 获取老师列表
+     */
+    @RequiresRoles("ADMIN")
+    @GetMapping("/list")
+    public R getTeacherList() {
+        List<Teacher> teacherList = teacherService.list();
+        for (Teacher teacher : teacherList) {
+            teacher.hidePassword();
+        }
+        return new R().success("success", teacherList);
     }
 }
 
