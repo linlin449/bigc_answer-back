@@ -1,5 +1,6 @@
 package com.lin.bigc_answer.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lin.bigc_answer.entity.question.QuestionOption;
 import com.lin.bigc_answer.mapper.QuestionOptionMapper;
@@ -26,11 +27,21 @@ public class QuestionOptionServiceImpl extends ServiceImpl<QuestionOptionMapper,
 
 
     @Override
-    public List<QuestionOption> getByQuestionIds(List<Integer> questionIds) {
+    public QuestionOption getByQuestionId(Integer questionId) {
+        if (questionId == null) return null;
+        LambdaQueryWrapper<QuestionOption> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(QuestionOption::getQuestionId, questionId);
+        return questionOptionMapper.selectOne(wrapper);
+    }
+
+    @Override
+    public List<QuestionOption> getByQuestionIdList(List<Integer> questionIds) {
         List<QuestionOption> questionOptions = new LinkedList<>();
         for (Integer questionId : questionIds) {
             if (questionId != null) {
-                questionOptions.add(questionOptionMapper.selectById(questionId));
+                LambdaQueryWrapper<QuestionOption> wrapper = new LambdaQueryWrapper<>();
+                wrapper.eq(QuestionOption::getQuestionId, questionId);
+                questionOptions.add(questionOptionMapper.selectOne(wrapper));
                 continue;
             }
             questionOptions.add(null);
@@ -41,7 +52,10 @@ public class QuestionOptionServiceImpl extends ServiceImpl<QuestionOptionMapper,
     @Override
     public Boolean deleteByQuestionId(Integer questionId) {
         if (questionId == null) return false;
-        if (questionOptionMapper.selectById(questionId) == null) return null;
-        return questionOptionMapper.deleteById(questionId) == 1;
+        LambdaQueryWrapper<QuestionOption> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(QuestionOption::getQuestionId, questionId);
+        QuestionOption questionOption = questionOptionMapper.selectOne(wrapper);
+        if (questionOption == null) return null;
+        return questionOptionMapper.delete(wrapper) == 1;
     }
 }

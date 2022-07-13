@@ -1,5 +1,6 @@
 package com.lin.bigc_answer.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lin.bigc_answer.entity.question.QuestionRightAnswer;
 import com.lin.bigc_answer.mapper.QuestionRightAnswerMapper;
@@ -25,7 +26,18 @@ public class QuestionRightAnswerServiceImpl extends ServiceImpl<QuestionRightAns
     @Override
     public Boolean deleteByQuestionId(Integer questionId) {
         if (questionId == null) return false;
-        if (questionRightAnswerMapper.selectById(questionId) == null) return null;
-        return questionRightAnswerMapper.deleteById(questionId) == 1;
+        LambdaQueryWrapper<QuestionRightAnswer> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(QuestionRightAnswer::getQuestionId, questionId);
+        QuestionRightAnswer questionRightAnswer = questionRightAnswerMapper.selectOne(wrapper);
+        if (questionRightAnswer == null) return null;
+        return questionRightAnswerMapper.delete(wrapper) == 1;
+    }
+
+    @Override
+    public QuestionRightAnswer getByQuestionId(Integer questionId) {
+        if (questionId == null) return null;
+        LambdaQueryWrapper<QuestionRightAnswer> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(QuestionRightAnswer::getQuestionId, questionId);
+        return questionRightAnswerMapper.selectOne(wrapper);
     }
 }

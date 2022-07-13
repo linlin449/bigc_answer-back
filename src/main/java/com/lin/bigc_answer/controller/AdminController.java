@@ -82,7 +82,6 @@ public class AdminController {
     @RequiresRoles("ADMIN")
     @GetMapping("/info/{username}")
     public R getAdminInfo(@PathVariable("username") String username) {
-        Subject subject = SecurityUtils.getSubject();
         Admin admin = adminService.queryByUserName(username);
         admin.hidePassword();
         return new R().success("success", admin);

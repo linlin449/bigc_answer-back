@@ -75,6 +75,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     @Override
     public IPage<Question> getUnansweredPageByStudentId(Integer studentId, int currentPage, int pageSize) {
         IPage<AnswerDetail> answerDetailIPage = answerDetailService.selectPageByStudentId(studentId, currentPage, pageSize);
+        if (answerDetailIPage.getTotal() == 0) return getQuestionPage(currentPage, pageSize);
         List<AnswerDetail> records = answerDetailIPage.getRecords();
         List<Integer> questionId = new ArrayList<>();
         for (AnswerDetail record : records) {
@@ -96,7 +97,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         Student student = studentService.queryByUserName(username);
         if (student != null) {
             AnswerDetail answerDetail = answerDetailService.getByQuestionIdAndStudentId(questionId, student.getId());
-            return answerDetail != null;
+            if (answerDetail == null) return null;
+            return answerDetail.getIsRight() == 1;
         }
         return null;
     }
@@ -108,7 +110,11 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         for (Integer questionId : questionIds) {
             if (questionId != null && student != null) {
                 AnswerDetail answerDetail = answerDetailService.getByQuestionIdAndStudentId(questionId, student.getId());
-                result.add(answerDetail != null);
+                if (answerDetail == null) {
+                    result.add(null);
+                } else {
+                    result.add(answerDetail.getIsRight() == 1);
+                }
                 continue;
             }
             result.add(null);

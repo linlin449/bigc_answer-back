@@ -6,6 +6,7 @@ import com.lin.bigc_answer.exception.ErrorCode;
 import com.lin.bigc_answer.service.QuestionOptionService;
 import com.lin.bigc_answer.utils.R;
 import com.lin.bigc_answer.utils.UserRole;
+import com.lin.bigc_answer.utils.VerifyUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
@@ -34,6 +35,10 @@ public class QuestionOptionController {
     @RequiresRoles("TEACHER")
     @PostMapping("/add")
     public R addOption(@RequestBody QuestionOption questionOption) {
+        if (questionOption.getQuestionId() == null) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        if (questionOptionService.getByQuestionId(questionOption.getQuestionId()) != null) {
+            return new R().fail("添加错误,该题选项已存在");
+        }
         if (questionOptionService.save(questionOption)) {
             return new R().success("添加成功");
         }
@@ -46,7 +51,8 @@ public class QuestionOptionController {
      */
     @GetMapping("/question/{qid}")
     public R getOption(@PathVariable("qid") String qid) {
-        QuestionOption option = questionOptionService.getById(qid);
+        if (!VerifyUtils.isObjectNumber(qid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        QuestionOption option = questionOptionService.getByQuestionId(Integer.valueOf(qid));
         if (option != null) {
             return new R().success("success", option);
         }
@@ -64,7 +70,7 @@ public class QuestionOptionController {
             if (!subject.hasRole(UserRole.ADMIN.name()) && !subject.hasRole(UserRole.TEACHER.name()))
                 return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
         }
-        List<QuestionOption> option = questionOptionService.getByQuestionIds(questionList);
+        List<QuestionOption> option = questionOptionService.getByQuestionIdList(questionList);
         if (option != null) {
             return new R().success("success", option);
         }

@@ -15,11 +15,18 @@ import java.util.List;
  */
 public interface QuestionOptionService extends IService<QuestionOption> {
     /**
+     * 根据问题ID获取选项
+     * @param questionId 问题ID
+     * @return 问题选项实体类
+     */
+    QuestionOption getByQuestionId(Integer questionId);
+
+    /**
      * 根据问题ID列表获取问题选项列表
      * @param questionIds 问题ID列表
      * @return 问题选项列表
      */
-    List<QuestionOption> getByQuestionIds(List<Integer> questionIds);
+    List<QuestionOption> getByQuestionIdList(List<Integer> questionIds);
 
     /**
      * 根据问题ID删除该问题的选项

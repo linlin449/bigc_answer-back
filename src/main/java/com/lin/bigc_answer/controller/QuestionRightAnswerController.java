@@ -2,6 +2,7 @@ package com.lin.bigc_answer.controller;
 
 
 import com.lin.bigc_answer.entity.question.QuestionRightAnswer;
+import com.lin.bigc_answer.exception.ErrorCode;
 import com.lin.bigc_answer.service.QuestionRightAnswerService;
 import com.lin.bigc_answer.utils.R;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -32,6 +33,10 @@ public class QuestionRightAnswerController {
     @RequiresRoles("TEACHER")
     @PostMapping("/add")
     public R addRightAnswer(@RequestBody QuestionRightAnswer questionRightAnswer) {
+        if (questionRightAnswer.getQuestionId() == null) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        if (questionRightAnswerService.getByQuestionId(questionRightAnswer.getQuestionId()) != null) {
+            return new R().fail("添加错误,当前题目已存在正确答案");
+        }
         if (questionRightAnswerService.save(questionRightAnswer)) {
             return new R().success("添加成功");
         }

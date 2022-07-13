@@ -258,7 +258,7 @@ public class QuestionController {
         Student student = studentService.queryByUserName(userName);
         if (subject.isPermitted(UserRole.STUDENT + ":" + userName)) {
             Question question = questionService.getById(questionID);
-            QuestionRightAnswer questionRightAnswer = questionRightAnswerService.getById(questionID);
+            QuestionRightAnswer questionRightAnswer = questionRightAnswerService.getByQuestionId(Integer.valueOf(questionID));
             if (answerDetailService.getByQuestionIdAndStudentId(Integer.valueOf(questionID), student.getId()) != null) {
                 return new R().fail("抱歉,该题您已经答过,无法重复答题");
             }
@@ -272,8 +272,9 @@ public class QuestionController {
                 if (questionRightAnswer.getRightAnswer().equals(answer)) {
                     result.put("result", true);
                     answerDetail.setIsRight(1);
+                } else {
+                    result.put("result", false);
                 }
-                result.put("result", false);
                 answerDetail.setIsRight(0);
                 if (answerDetailService.save(answerDetail)) {
                     return new R().success("success", result);

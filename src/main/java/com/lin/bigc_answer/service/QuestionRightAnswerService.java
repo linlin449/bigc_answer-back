@@ -18,4 +18,11 @@ public interface QuestionRightAnswerService extends IService<QuestionRightAnswer
      * @return 删除成功返回真, 删除失败返回假, 答案不存在返回null
      */
     Boolean deleteByQuestionId(Integer questionId);
+
+    /**
+     * 根据问题ID获取正确答案
+     * @param questionId 问题ID
+     * @return 正确答案实体类
+     */
+    QuestionRightAnswer getByQuestionId(Integer questionId);
 }
