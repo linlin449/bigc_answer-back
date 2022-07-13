@@ -22,6 +22,7 @@ public class QuestionRightAnswer implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "question_id", type = IdType.AUTO)
+    private Integer id;
     private Integer questionId;
 
     /**

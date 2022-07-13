@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 80027
 File Encoding         : 65001
 
-Date: 2022-07-13 15:46:54
+Date: 2022-07-13 15:54:50
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -117,7 +117,7 @@ CREATE TABLE `major` (
 -- ----------------------------
 DROP TABLE IF EXISTS `question`;
 CREATE TABLE `question` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `question` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '问题名称，可以加入图片',
   `describe` varchar(255) DEFAULT NULL COMMENT '题目的简单描述，目的，建议等',
   `score` tinyint DEFAULT NULL COMMENT '分数<100分',
@@ -144,7 +144,7 @@ CREATE TABLE `question_level` (
 -- ----------------------------
 DROP TABLE IF EXISTS `question_option`;
 CREATE TABLE `question_option` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `question_id` int NOT NULL,
   `A` longtext,
   `B` longtext,
@@ -161,7 +161,7 @@ CREATE TABLE `question_option` (
 -- ----------------------------
 DROP TABLE IF EXISTS `question_right_answer`;
 CREATE TABLE `question_right_answer` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `question_id` int NOT NULL,
   `right_answer` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '若是多选题以-隔开',
   `analysis` longtext,
@@ -203,7 +203,7 @@ CREATE TABLE `student` (
   `phone` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '手机号用来找回密码或申请账号',
   `role` tinyint DEFAULT '3',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for student_false_question

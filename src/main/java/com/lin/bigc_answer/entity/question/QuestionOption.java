@@ -22,9 +22,9 @@ public class QuestionOption implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "question_id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
     private Integer questionId;
-
     @TableField("A")
     private String a;
 
