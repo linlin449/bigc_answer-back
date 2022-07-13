@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 80027
 File Encoding         : 65001
 
-Date: 2022-07-08 21:55:28
+Date: 2022-07-13 15:46:54
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -32,7 +32,7 @@ CREATE TABLE `admin` (
 -- ----------------------------
 DROP TABLE IF EXISTS `answer_detail`;
 CREATE TABLE `answer_detail` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `student_id` int DEFAULT NULL,
   `question_id` int DEFAULT NULL,
   `is_right` tinyint DEFAULT NULL COMMENT '0错误，1正确',
@@ -45,7 +45,7 @@ CREATE TABLE `answer_detail` (
 -- ----------------------------
 DROP TABLE IF EXISTS `answer_totle`;
 CREATE TABLE `answer_totle` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `student_id` int DEFAULT NULL,
   `false_question_number` int DEFAULT NULL COMMENT '错题数目',
   `true_question_number` int DEFAULT NULL COMMENT '正确题目数目',
@@ -59,7 +59,7 @@ CREATE TABLE `answer_totle` (
 DROP TABLE IF EXISTS `chapter`;
 CREATE TABLE `chapter` (
   `id` int NOT NULL,
-  `name` varbinary(20) NOT NULL,
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `subject_id` int NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -69,7 +69,7 @@ CREATE TABLE `chapter` (
 -- ----------------------------
 DROP TABLE IF EXISTS `exam`;
 CREATE TABLE `exam` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `describe` longtext,
   `limit_time` int DEFAULT NULL,
@@ -82,7 +82,7 @@ CREATE TABLE `exam` (
 -- ----------------------------
 DROP TABLE IF EXISTS `exam_question`;
 CREATE TABLE `exam_question` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `exam_id` int DEFAULT NULL,
   `question_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -94,7 +94,7 @@ CREATE TABLE `exam_question` (
 -- ----------------------------
 DROP TABLE IF EXISTS `exam_student`;
 CREATE TABLE `exam_student` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `student_id` int DEFAULT NULL,
   `exam_id` int DEFAULT NULL,
   `exam_score` int DEFAULT NULL,
@@ -144,6 +144,7 @@ CREATE TABLE `question_level` (
 -- ----------------------------
 DROP TABLE IF EXISTS `question_option`;
 CREATE TABLE `question_option` (
+  `id` int NOT NULL,
   `question_id` int NOT NULL,
   `A` longtext,
   `B` longtext,
@@ -151,8 +152,8 @@ CREATE TABLE `question_option` (
   `D` longtext,
   `E` longtext,
   `F` longtext,
-  PRIMARY KEY (`question_id`),
-  CONSTRAINT `分表` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`) ON DELETE CASCADE
+  PRIMARY KEY (`id`),
+  KEY `question_id` (`question_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
@@ -160,11 +161,12 @@ CREATE TABLE `question_option` (
 -- ----------------------------
 DROP TABLE IF EXISTS `question_right_answer`;
 CREATE TABLE `question_right_answer` (
+  `id` int NOT NULL,
   `question_id` int NOT NULL,
   `right_answer` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '若是多选题以-隔开',
   `analysis` longtext,
-  PRIMARY KEY (`question_id`),
-  CONSTRAINT `分表2` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`) ON DELETE CASCADE
+  PRIMARY KEY (`id`),
+  KEY `question_id` (`question_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
@@ -193,7 +195,7 @@ CREATE TABLE `role` (
 -- ----------------------------
 DROP TABLE IF EXISTS `student`;
 CREATE TABLE `student` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '姓名',
   `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '登录账号',
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '登录密码',
@@ -201,14 +203,14 @@ CREATE TABLE `student` (
   `phone` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '手机号用来找回密码或申请账号',
   `role` tinyint DEFAULT '3',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for student_false_question
 -- ----------------------------
 DROP TABLE IF EXISTS `student_false_question`;
 CREATE TABLE `student_false_question` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `student_id` int DEFAULT NULL,
   `question_id` int DEFAULT NULL COMMENT '问题id值',
   `chapter_id` int DEFAULT NULL COMMENT '问题所属节',
@@ -234,7 +236,7 @@ CREATE TABLE `subject` (
 -- ----------------------------
 DROP TABLE IF EXISTS `teacher`;
 CREATE TABLE `teacher` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `username` varchar(255) DEFAULT NULL,
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
@@ -249,7 +251,7 @@ CREATE TABLE `teacher` (
 -- ----------------------------
 DROP TABLE IF EXISTS `teacher_student`;
 CREATE TABLE `teacher_student` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `student_id` int NOT NULL,
   `teacher_id` int NOT NULL,
   PRIMARY KEY (`id`),
