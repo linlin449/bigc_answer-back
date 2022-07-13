@@ -5,6 +5,7 @@ import com.lin.bigc_answer.entity.question.Chapter;
 import com.lin.bigc_answer.entity.question.Subject;
 import com.lin.bigc_answer.exception.ErrorCode;
 import com.lin.bigc_answer.service.ChapterService;
+import com.lin.bigc_answer.service.MajorService;
 import com.lin.bigc_answer.service.SubjectService;
 import com.lin.bigc_answer.utils.R;
 import com.lin.bigc_answer.utils.VerifyUtils;
@@ -30,6 +31,9 @@ public class SubjectController {
 
     @Resource(name = "chapterServiceImpl")
     private ChapterService chapterService;
+
+    @Resource(name = "majorServiceImpl")
+    private MajorService majorService;
 
     /**
      * 根据ID获取课程
@@ -71,6 +75,7 @@ public class SubjectController {
     @RequiresRoles("TEACHER")
     @PostMapping("/add")
     public R addSubject(@RequestBody Subject subject) {
+        if (majorService.getById(subject.getMajorId()) == null) return new R().fail("添加失败,专业不存在");
         if (subjectService.save(subject)) {
             return new R().success("添加成功");
         }

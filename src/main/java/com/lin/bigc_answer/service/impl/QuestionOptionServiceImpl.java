@@ -24,6 +24,7 @@ public class QuestionOptionServiceImpl extends ServiceImpl<QuestionOptionMapper,
     @Resource
     private QuestionOptionMapper questionOptionMapper;
 
+
     @Override
     public List<QuestionOption> getByQuestionIds(List<Integer> questionIds) {
         List<QuestionOption> questionOptions = new LinkedList<>();
@@ -35,5 +36,12 @@ public class QuestionOptionServiceImpl extends ServiceImpl<QuestionOptionMapper,
             questionOptions.add(null);
         }
         return questionOptions;
+    }
+
+    @Override
+    public Boolean deleteByQuestionId(Integer questionId) {
+        if (questionId == null) return false;
+        if (questionOptionMapper.selectById(questionId) == null) return null;
+        return questionOptionMapper.deleteById(questionId) == 1;
     }
 }

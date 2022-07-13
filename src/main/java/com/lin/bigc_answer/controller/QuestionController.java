@@ -4,7 +4,6 @@ package com.lin.bigc_answer.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lin.bigc_answer.entity.AnswerDetail;
 import com.lin.bigc_answer.entity.question.Question;
-import com.lin.bigc_answer.entity.question.QuestionOption;
 import com.lin.bigc_answer.entity.question.QuestionRightAnswer;
 import com.lin.bigc_answer.entity.user.Student;
 import com.lin.bigc_answer.exception.ErrorCode;
@@ -16,13 +15,10 @@ import com.lin.bigc_answer.utils.VerifyUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +45,12 @@ public class QuestionController {
 
     @Resource(name = "questionOptionServiceImpl")
     private QuestionOptionService questionOptionService;
+
+    @Resource(name = "subjectServiceImpl")
+    private SubjectService subjectService;
+
+    @Resource(name = "chapterServiceImpl")
+    private ChapterService chapterService;
 
     /**
      * 根据页码获取题目,页大小默认为10
@@ -230,6 +232,8 @@ public class QuestionController {
     @RequiresRoles("TEACHER")
     @PostMapping("/add")
     public R addQuestion(@RequestBody Question question) {
+        if (chapterService.getById(question.getChapterId()) == null) return new R().fail("添加失败,章节不存在");
+        if (subjectService.getById(question.getSubjectId()) == null) return new R().fail("添加失败,课程不存在");
         Integer questionId = questionService.addQuestion(question);
         if (questionId != null) {
             return new R().success("添加成功", questionId);
@@ -244,7 +248,6 @@ public class QuestionController {
      */
     @PostMapping("/answer")
     public R answerQuestion(@RequestBody Map<String, String> params, HttpServletRequest request) {
-        List<Boolean> res = new ArrayList<>();
         String answer = params.get("answer");
         String questionID = params.get("questionID");
         if (answer == null || questionID == null || !VerifyUtils.isObjectNumber(questionID))
@@ -287,25 +290,14 @@ public class QuestionController {
      * @param qid 题目ID
      */
     @RequiresRoles("TEACHER")
-    @Transactional
     @GetMapping("/delete/{qid}")
     public R delQuestion(@PathVariable("qid") String qid) {
         if (!VerifyUtils.isObjectNumber(qid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
-        QuestionRightAnswer rightAnswer = questionRightAnswerService.getById(qid);
-        QuestionOption questionOption = questionOptionService.getById(qid);
-        Question question = questionService.getById(qid);
-        List<Boolean> deleted = new ArrayList<>();
-        if (question != null) {
-            if (rightAnswer != null) deleted.add(questionRightAnswerService.removeById(qid));
-            if (questionOption != null) deleted.add(questionOptionService.removeById(qid));
-            deleted.add(questionService.removeById(qid));
-            for (Boolean del : deleted) {
-                if (!del) {
-                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                    return new R().fail("删除失败");
-                }
+        if (questionService.getById(qid) != null) {
+            if (questionService.deleteQuestionAndOptionById(Integer.valueOf(qid))) {
+                return new R().success("删除成功");
             }
-            return new R().success("删除成功");
+            return new R().fail("删除失败");
         }
         return new R().fail("题目不存在,无法删除");
     }

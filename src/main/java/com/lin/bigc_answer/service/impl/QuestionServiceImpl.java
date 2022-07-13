@@ -8,10 +8,10 @@ import com.lin.bigc_answer.entity.AnswerDetail;
 import com.lin.bigc_answer.entity.question.Question;
 import com.lin.bigc_answer.entity.user.Student;
 import com.lin.bigc_answer.mapper.QuestionMapper;
-import com.lin.bigc_answer.service.AnswerDetailService;
-import com.lin.bigc_answer.service.QuestionService;
-import com.lin.bigc_answer.service.StudentService;
+import com.lin.bigc_answer.service.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -33,6 +33,11 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     private AnswerDetailService answerDetailService;
     @Resource(name = "studentServiceImpl")
     private StudentService studentService;
+    @Resource(name = "questionOptionServiceImpl")
+    private QuestionOptionService questionOptionService;
+
+    @Resource(name = "questionRightAnswerServiceImpl")
+    private QuestionRightAnswerService questionRightAnswerService;
 
     @Override
     public IPage<Question> getQuestionPage(int currentPage, int pageSize) {
@@ -158,5 +163,19 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     @Override
     public Integer addQuestion(Question question) {
         return questionMapper.insert(question) == 1 ? question.getId() : null;
+    }
+
+    @Transactional
+    @Override
+    public Boolean deleteQuestionAndOptionById(Integer questionId) {
+        if (questionId == null) return false;
+        if (questionMapper.selectById(questionId) == null) return null;
+        if (questionRightAnswerService.deleteByQuestionId(questionId) != Boolean.FALSE && questionOptionService.deleteByQuestionId(questionId) != Boolean.FALSE) {
+            if (questionMapper.deleteById(questionId) == 1) {
+                return true;
+            }
+        }
+        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        return false;
     }
 }

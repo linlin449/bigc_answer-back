@@ -6,6 +6,8 @@ import com.lin.bigc_answer.mapper.QuestionRightAnswerMapper;
 import com.lin.bigc_answer.service.QuestionRightAnswerService;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 /**
  * <p>
  *  服务实现类
@@ -17,4 +19,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class QuestionRightAnswerServiceImpl extends ServiceImpl<QuestionRightAnswerMapper, QuestionRightAnswer> implements QuestionRightAnswerService {
 
+    @Resource
+    private QuestionRightAnswerMapper questionRightAnswerMapper;
+
+    @Override
+    public Boolean deleteByQuestionId(Integer questionId) {
+        if (questionId == null) return false;
+        if (questionRightAnswerMapper.selectById(questionId) == null) return null;
+        return questionRightAnswerMapper.deleteById(questionId) == 1;
+    }
 }

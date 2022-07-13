@@ -2,6 +2,7 @@ package com.lin.bigc_answer.exception;
 
 import com.lin.bigc_answer.utils.R;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -15,5 +16,10 @@ public class ProjectExceptionAdvice {
         e.printStackTrace();
         log.error("服务器内部异常");
         return new R().fail("服务器异常!", null, ErrorCode.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler
+    public R doException(UnauthorizedException e) {
+        return new R().fail("未授权", null, ErrorCode.UNAUTHORIZED_ERROR);
     }
 }

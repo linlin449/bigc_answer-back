@@ -96,4 +96,11 @@ public interface QuestionService extends IService<Question> {
      * @return 增加成功则返回主键ID, 失败返回null
      */
     Integer addQuestion(Question question);
+
+    /**
+     * 根据问题ID删除该问题及其选项和正确答案
+     * @param questionId 问题ID
+     * @return 删除成功返回真, 失败返回假,问题不存在返回null
+     */
+    Boolean deleteQuestionAndOptionById(Integer questionId);
 }

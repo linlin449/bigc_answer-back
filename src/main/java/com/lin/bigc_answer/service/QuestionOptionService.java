@@ -20,4 +20,11 @@ public interface QuestionOptionService extends IService<QuestionOption> {
      * @return 问题选项列表
      */
     List<QuestionOption> getByQuestionIds(List<Integer> questionIds);
+
+    /**
+     * 根据问题ID删除该问题的选项
+     * @param questionId 问题ID
+     * @return 删除成功返回真, 删除失败返回假,选项不存在返回null
+     */
+    Boolean deleteByQuestionId(Integer questionId);
 }

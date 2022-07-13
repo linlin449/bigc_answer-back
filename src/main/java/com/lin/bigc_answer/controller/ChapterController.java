@@ -73,6 +73,7 @@ public class ChapterController {
     @RequiresRoles("TEACHER")
     @GetMapping("/add")
     public R addChapter(@RequestBody Chapter chapter) {
+        if (subjectService.getById(chapter.getSubjectId()) == null) return new R().fail("添加失败,课程不存在");
         if (chapterService.save(chapter)) {
             return new R().success("添加成功");
         }
