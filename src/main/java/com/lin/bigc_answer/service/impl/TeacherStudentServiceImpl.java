@@ -110,4 +110,20 @@ public class TeacherStudentServiceImpl extends ServiceImpl<TeacherStudentMapper,
         }
         return null;
     }
+
+    @Override
+    public boolean deleteTeacherStudent(Integer teacherId, Integer studentId) {
+        if (teacherId == null || studentId == null) return false;
+        LambdaQueryWrapper<TeacherStudent> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(TeacherStudent::getStudentId, studentId).eq(TeacherStudent::getTeacherId, teacherId);
+        return teacherStudentMapper.delete(wrapper) == 1;
+    }
+
+    @Override
+    public TeacherStudent getByTeacherIdAndStudentId(Integer teacherId, Integer studentId) {
+        if (teacherId == null || studentId == null) return null;
+        LambdaQueryWrapper<TeacherStudent> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(TeacherStudent::getStudentId, studentId).eq(TeacherStudent::getTeacherId, teacherId);
+        return teacherStudentMapper.selectOne(wrapper);
+    }
 }

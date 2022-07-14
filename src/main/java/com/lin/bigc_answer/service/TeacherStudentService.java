@@ -42,4 +42,20 @@ public interface TeacherStudentService extends IService<TeacherStudent> {
      * @return Teacher List,失败返回null
      */
     List<Teacher> getTeacherListByStudentUsername(String username);
+
+    /**
+     * 删除老师与学生建立的关系
+     * @param teacherId 老师ID
+     * @param studentId 学生ID
+     * @return 删除成功返回真, 失败返回假
+     */
+    boolean deleteTeacherStudent(Integer teacherId, Integer studentId);
+
+    /**
+     * 通过老师ID和学生ID获取TeacherStudent实体类
+     * @param teacherId 老师ID
+     * @param studentId 学生ID
+     * @return TeacherStudent实体类, 若获取失败返回null
+     */
+    TeacherStudent getByTeacherIdAndStudentId(Integer teacherId, Integer studentId);
 }

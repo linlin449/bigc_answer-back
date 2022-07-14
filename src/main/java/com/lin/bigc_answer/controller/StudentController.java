@@ -11,9 +11,11 @@ import com.lin.bigc_answer.service.TeacherStudentService;
 import com.lin.bigc_answer.utils.JWTUtil;
 import com.lin.bigc_answer.utils.R;
 import com.lin.bigc_answer.utils.UserRole;
+import com.lin.bigc_answer.utils.VerifyUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
 
@@ -107,6 +109,17 @@ public class StudentController {
             return new R().fail("服务器错误");
         }
         return new R().success("注册成功");
+    }
+
+    /**
+     * 分页获取全部学生列表,默认页大小为10
+     * @param pid 页码
+     */
+    @RequiresRoles("ADMIN")
+    @GetMapping("/list/{pid}")
+    public R getStudentPage(@PathVariable("pid") String pid) {
+        if (!VerifyUtils.isObjectNumber(pid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        return new R().success("success", studentService.getStudentPage(Integer.parseInt(pid), 10));
     }
 }
 

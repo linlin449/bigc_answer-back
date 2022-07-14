@@ -36,7 +36,6 @@ public class UserRealm extends AuthorizingRealm {
 
     //授权
     @Override
-    //STUDENT:2020
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         String primaryPrincipal = (String) principalCollection.getPrimaryPrincipal();
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
@@ -52,8 +51,10 @@ public class UserRealm extends AuthorizingRealm {
                 simpleAuthorizationInfo.addRole(UserRole.TEACHER.name());
                 simpleAuthorizationInfo.addStringPermission(primaryPrincipal);
                 List<Student> studentListByTeacherId = teacherStudentService.getStudentListByTeacherId(teacher.getId());
-                for (Student student : studentListByTeacherId) {
-                    simpleAuthorizationInfo.addStringPermission(UserRole.STUDENT.name() + ":" + student.getUsername());
+                if (studentListByTeacherId != null) {
+                    for (Student student : studentListByTeacherId) {
+                        simpleAuthorizationInfo.addStringPermission(UserRole.STUDENT.name() + ":" + student.getUsername());
+                    }
                 }
             }
         } else if (split[0].equals(UserRole.ADMIN.name())) {

@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lin.bigc_answer.config.shiro.UserToken;
 import com.lin.bigc_answer.entity.user.Student;
 import com.lin.bigc_answer.entity.user.Teacher;
+import com.lin.bigc_answer.entity.user.TeacherStudent;
 import com.lin.bigc_answer.exception.ErrorCode;
 import com.lin.bigc_answer.service.CaptchaService;
+import com.lin.bigc_answer.service.StudentService;
 import com.lin.bigc_answer.service.TeacherService;
 import com.lin.bigc_answer.service.TeacherStudentService;
 import com.lin.bigc_answer.utils.JWTUtil;
@@ -39,6 +41,8 @@ public class TeacherController {
     @Resource(name = "teacherServiceImpl")
     private TeacherService teacherService;
 
+    @Resource(name = "studentServiceImpl")
+    private StudentService studentService;
     @Resource(name = "captchaServiceImpl")
     private CaptchaService captchaService;
 
@@ -113,6 +117,57 @@ public class TeacherController {
                 return new R().success("success", studentIPage);
             }
             return new R().fail("老师不存在");
+        }
+        return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
+    }
+
+    /**
+     * 将某学生从老师的学生列表中删除
+     * @param sid 学生ID
+     * @param username 老师username
+     */
+    @GetMapping("/{username}/deletestudent/{sid}")
+    public R deleteStudentFromTeacherStudent(@PathVariable("sid") String sid, @PathVariable("username") String username) {
+        if (!VerifyUtils.isObjectNumber(sid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isPermitted(UserRole.TEACHER.name() + ":" + username)) {
+            Student student = studentService.getById(sid);
+            Teacher teacher = teacherService.queryByUserName(username);
+            if (student == null || teacher == null) return new R().fail("信息有误,无法删除");
+            if (subject.isPermitted(UserRole.STUDENT.name() + ":" + student.getUsername())) {
+                if (teacherStudentService.deleteTeacherStudent(teacher.getId(), student.getId())) {
+                    return new R().success("删除成功");
+                }
+                return new R().fail("删除失败");
+            }
+            return new R().fail("Ta不是你的学生,无法删除");
+        }
+        return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
+    }
+
+    /**
+     * 将某学生加入老师的学生列表
+     * @param sid 学生ID
+     * @param username 老师username
+     */
+    @GetMapping("/{username}/addstudent/{sid}")
+    public R addStudentToTeacherStudent(@PathVariable("sid") String sid, @PathVariable("username") String username) {
+        if (!VerifyUtils.isObjectNumber(sid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isPermitted(UserRole.TEACHER.name() + ":" + username)) {
+            Student student = studentService.getById(sid);
+            Teacher teacher = teacherService.queryByUserName(username);
+            if (student == null || teacher == null) return new R().fail("信息有误,无法添加");
+            if (teacherStudentService.getByTeacherIdAndStudentId(teacher.getId(), student.getId()) == null) {
+                TeacherStudent teacherStudent = new TeacherStudent();
+                teacherStudent.setTeacherId(teacher.getId());
+                teacherStudent.setStudentId(student.getId());
+                if (teacherStudentService.save(teacherStudent)) {
+                    return new R().success("添加成功");
+                }
+                return new R().fail("添加失败");
+            }
+            return new R().fail("信息已存在,请勿重复添加");
         }
         return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
     }

@@ -1,6 +1,8 @@
 package com.lin.bigc_answer.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lin.bigc_answer.entity.user.Student;
 import com.lin.bigc_answer.mapper.StudentMapper;
@@ -29,5 +31,11 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         LambdaQueryWrapper<Student> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Student::getUsername, username);
         return studentMapper.selectOne(wrapper);
+    }
+
+    @Override
+    public IPage<Student> getStudentPage(int currentPage, int pageSize) {
+        IPage<Student> iPage = new Page<>(currentPage, pageSize);
+        return studentMapper.selectPage(iPage, null);
     }
 }

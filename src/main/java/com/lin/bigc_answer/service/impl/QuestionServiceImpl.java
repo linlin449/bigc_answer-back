@@ -81,15 +81,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         for (AnswerDetail record : records) {
             questionId.add(record.getQuestionId());
         }
-        IPage<Question> questionIPage = new Page<>();
-        if (questionId.size() > 0) {
-            questionIPage.setRecords(questionMapper.selectList(new LambdaQueryWrapper<Question>().notIn(Question::getId, questionId)));
-        }
-        questionIPage.setPages(answerDetailIPage.getPages());
-        questionIPage.setTotal(answerDetailIPage.getTotal());
-        questionIPage.setCurrent(currentPage);
-        questionIPage.setSize(pageSize);
-        return questionIPage;
+        return questionMapper.selectPage(new Page<>(currentPage, pageSize), new LambdaQueryWrapper<Question>().notIn(Question::getId, questionId));
     }
 
     @Override
@@ -134,8 +126,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         if (questionId.size() > 0) {
             questionIPage.setRecords(questionMapper.selectBatchIds(questionId));
         }
-        questionIPage.setPages(questionIPage.getPages());
-        questionIPage.setTotal(questionIPage.getTotal());
+        questionIPage.setPages(answerDetailIPage.getPages());
+        questionIPage.setTotal(answerDetailIPage.getTotal());
         questionIPage.setCurrent(currentPage);
         questionIPage.setSize(pageSize);
         return questionIPage;
@@ -153,8 +145,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         if (questionId.size() > 0) {
             questionIPage.setRecords(questionMapper.selectBatchIds(questionId));
         }
-        questionIPage.setPages(questionIPage.getPages());
-        questionIPage.setTotal(questionIPage.getTotal());
+        questionIPage.setPages(answerDetailIPage.getPages());
+        questionIPage.setTotal(answerDetailIPage.getTotal());
         questionIPage.setCurrent(currentPage);
         questionIPage.setSize(pageSize);
         return questionIPage;

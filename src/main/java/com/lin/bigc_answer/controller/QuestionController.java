@@ -122,7 +122,7 @@ public class QuestionController {
     }
 
     /**
-     * 分页获取学生为做过的题目,页大小默认为10
+     * 分页获取学生未做过的题目,页大小默认为10
      * @param page 页码
      * @param username 学生username
      */
@@ -301,6 +301,30 @@ public class QuestionController {
             return new R().fail("删除失败");
         }
         return new R().fail("题目不存在,无法删除");
+    }
+
+    /**
+     * 获取学生的做题详细(已做题数量 未做题数量 正确数量)
+     * @param username 学生username
+     */
+    @GetMapping("/info/student/{username}")
+    public R getStudentQuestionDetail(@PathVariable("username") String username) {
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isPermitted(UserRole.STUDENT.name() + ":" + username)) {
+            Student student = studentService.queryByUserName(username);
+            if (student != null) {
+                IPage<Question> answeredPage = questionService.getAnsweredPageByStudentId(student.getId(), 1, 1);
+                IPage<Question> unansweredPage = questionService.getUnansweredPageByStudentId(student.getId(), 1, 1);
+                IPage<Question> rightPage = questionService.getRightPageByStudentId(student.getId(), 1, 1);
+                Map<String, Object> map = new HashMap<>();
+                map.put("answered", answeredPage.getTotal());
+                map.put("unanswered", unansweredPage.getTotal());
+                map.put("answerright", rightPage.getTotal());
+                return new R().success("success", map);
+            }
+            return new R().fail("学生不存在");
+        }
+        return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
     }
 }
 
