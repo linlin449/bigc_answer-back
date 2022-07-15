@@ -76,5 +76,21 @@ public class QuestionOptionController {
         }
         return new R().fail("题目选项不存在");
     }
+
+    /**
+     * 更新题目选项需要老师和管理员权限
+     * @param questionOption
+     * @return 更新成功
+     */
+    @RequiresRoles("TEACHER")
+    @PutMapping("/update")
+    public R updateOption(@RequestBody QuestionOption questionOption){
+        if (questionOption.getQuestionId() == null) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        if (questionOptionService.getByQuestionId(questionOption.getQuestionId()) != null) {
+            questionOptionService.updateById(questionOption);
+            return new R().success("更新成功");
+        }
+        return new R().fail("更新失败");
+    }
 }
 

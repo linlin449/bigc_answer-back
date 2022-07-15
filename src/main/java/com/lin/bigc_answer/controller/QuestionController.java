@@ -241,6 +241,21 @@ public class QuestionController {
         return new R().fail("添加失败!");
     }
 
+    /**
+     * 更新操作需要老师和管理员权限
+     * @param question
+     * @return
+     */
+    @RequiresRoles("TEACHER")
+    @PutMapping("/uptate")
+    public R updateQuestion(@RequestBody Question question){
+        if (chapterService.getById(question.getChapterId()) == null) return new R().fail("更新失败,章节不存在");
+        if (subjectService.getById(question.getSubjectId()) == null) return new R().fail("更新失败,课程不存在");
+        if(questionService.updateById(question)){
+            return new R().success("更新成功");
+        }
+        return new R().fail("更新失败");
+    }
 
     /**
      * 答题

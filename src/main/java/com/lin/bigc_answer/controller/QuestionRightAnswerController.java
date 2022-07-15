@@ -6,10 +6,7 @@ import com.lin.bigc_answer.exception.ErrorCode;
 import com.lin.bigc_answer.service.QuestionRightAnswerService;
 import com.lin.bigc_answer.utils.R;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -41,6 +38,16 @@ public class QuestionRightAnswerController {
             return new R().success("添加成功");
         }
         return new R().fail("添加失败");
+    }
+    @RequiresRoles("TEACHER")
+    @PutMapping("/uptate")
+    public R updateRightAnswer(@RequestBody QuestionRightAnswer questionRightAnswer){
+        if (questionRightAnswer.getQuestionId() == null) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        if (questionRightAnswerService.getByQuestionId(questionRightAnswer.getQuestionId()) != null) {
+            questionRightAnswerService.updateById(questionRightAnswer);
+            return new R().success("更新成功");
+        }
+        return new R().fail("更新失败");
     }
 }
 
