@@ -184,5 +184,42 @@ public class TeacherController {
         }
         return new R().success("success", teacherList);
     }
+
+    /**
+     * 修改老师个人信息
+     * @param teacher 老师实体类
+     */
+    @RequiresRoles("ADMIN")
+    @PutMapping("/update")
+    public R updateTeacher(@RequestBody Teacher teacher) {
+        if (teacher.getId() == null) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        teacher.setPassword(null);
+        teacher.setRole(null);
+        if (teacherService.updateById(teacher)) {
+            return new R().success("修改成功");
+        }
+        return new R().fail("修改失败");
+    }
+
+    /**
+     * 通过老师ID删除学生
+     * @param tid 老师ID
+     */
+    @RequiresRoles("ADMIN")
+    @GetMapping("/delete/{tid}")
+    public R deleteTeacher(@PathVariable("tid") String tid) {
+        if (!VerifyUtils.isObjectNumber(tid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        if (teacherService.getById(tid) != null) {
+            IPage<Student> studentIPage = teacherStudentService.getStudentPageByTeacherId(Integer.valueOf(tid), 1, 1);
+            if (studentIPage.getTotal() == 0) {
+                if (teacherService.removeById(tid)) {
+                    return new R().success("删除成功");
+                }
+                return new R().fail("删除失败");
+            }
+            return new R().fail("该老师拥有学生,请先删除师生关系");
+        }
+        return new R().fail("老师不存在,无法删除");
+    }
 }
 

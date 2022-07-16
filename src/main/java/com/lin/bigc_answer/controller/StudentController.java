@@ -121,5 +121,18 @@ public class StudentController {
         if (!VerifyUtils.isObjectNumber(pid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
         return new R().success("success", studentService.getStudentPage(Integer.parseInt(pid), 10));
     }
+
+    @RequiresRoles("ADMIN")
+    @GetMapping("/delete/{username}")
+    public R deleteStudent(@PathVariable("username") String username) {
+        Student student = studentService.queryByUserName(username);
+        if (student != null) {
+            if (studentService.deleteStudentInfo(student.getId())) {
+                return new R().success("删除成功");
+            }
+            return new R().fail("删除失败");
+        }
+        return new R().fail("学生不存在,无法删除");
+    }
 }
 

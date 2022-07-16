@@ -33,7 +33,7 @@ public class TeacherStudentServiceImpl extends ServiceImpl<TeacherStudentMapper,
 
     @Resource(name = "teacherServiceImpl")
     private TeacherService teacherService;
-    @Resource(name = "studentServiceImpl")
+    @Resource
     private StudentService studentService;
 
     @Override
@@ -125,5 +125,13 @@ public class TeacherStudentServiceImpl extends ServiceImpl<TeacherStudentMapper,
         LambdaQueryWrapper<TeacherStudent> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(TeacherStudent::getStudentId, studentId).eq(TeacherStudent::getTeacherId, teacherId);
         return teacherStudentMapper.selectOne(wrapper);
+    }
+
+    @Override
+    public List<TeacherStudent> getByStudentId(Integer studentId) {
+        if (studentId == null) return null;
+        LambdaQueryWrapper<TeacherStudent> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(TeacherStudent::getStudentId, studentId);
+        return teacherStudentMapper.selectList(wrapper);
     }
 }

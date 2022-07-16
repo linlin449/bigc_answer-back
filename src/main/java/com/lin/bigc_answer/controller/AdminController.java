@@ -30,7 +30,7 @@ import java.util.Map;
  * @since 2022-07-05
  */
 @RestController
-@RequestMapping("/lin.bigc_answer/admin")
+@RequestMapping("/admin")
 public class AdminController {
     @Resource(name = "adminServiceImpl")
     private AdminService adminService;

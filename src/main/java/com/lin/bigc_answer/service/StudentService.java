@@ -27,4 +27,10 @@ public interface StudentService extends IService<Student> {
      * @return IPage<Student>
      */
     IPage<Student> getStudentPage(int currentPage, int pageSize);
+
+    /**
+     * 删除学生的所有信息(做题记录,错题等一切记录)
+     * @param studentId 学生ID
+     */
+    boolean deleteStudentInfo(Integer studentId);
 }

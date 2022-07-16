@@ -58,4 +58,11 @@ public interface TeacherStudentService extends IService<TeacherStudent> {
      * @return TeacherStudent实体类, 若获取失败返回null
      */
     TeacherStudent getByTeacherIdAndStudentId(Integer teacherId, Integer studentId);
+
+    /**
+     * 通过学生ID获取 TeacherStudent 列表
+     * @param studentId 学生ID
+     * @return TeacherStudent List
+     */
+    List<TeacherStudent> getByStudentId(Integer studentId);
 }
