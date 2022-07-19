@@ -4,6 +4,7 @@ import com.lin.bigc_answer.entity.user.Admin;
 import com.lin.bigc_answer.mapper.TeacherStudentMapper;
 import com.lin.bigc_answer.service.AdminService;
 import com.lin.bigc_answer.service.TeacherStudentService;
+import com.lin.bigc_answer.utils.EmailUtils;
 import com.lin.bigc_answer.utils.JWTUtil;
 import com.lin.bigc_answer.utils.UserRole;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,9 @@ class BigcAnswerApplicationTests {
     @Resource
     TeacherStudentMapper teacherStudentMapper;
 
+    @Resource
+    EmailUtils emailUtils;
+
     @Test
     public void admin_queryByUserName() {
         Admin admin = adminService.queryByUserName("10001");
@@ -32,5 +36,10 @@ class BigcAnswerApplicationTests {
         System.out.println("token===>" + token);
         System.out.println("UserName===>" + JWTUtil.getUserName(token));
         System.out.println("UserRole===>" + JWTUtil.getUserRole(token));
+    }
+
+    @Test
+    public void mailTest() {
+        System.out.println(emailUtils.sendMail("vinkangnet@gmail.com", "这是一封测试邮件", "<h1>Hello th1nk</h1>"));
     }
 }

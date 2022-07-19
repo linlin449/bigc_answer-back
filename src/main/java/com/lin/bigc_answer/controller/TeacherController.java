@@ -150,13 +150,39 @@ public class TeacherController {
      * @param sid 学生ID
      * @param username 老师username
      */
-    @GetMapping("/{username}/addstudent/{sid}")
-    public R addStudentToTeacherStudent(@PathVariable("sid") String sid, @PathVariable("username") String username) {
+    @GetMapping("/{username}/addstudent/id/{sid}")
+    public R addStudentToTeacherStudentById(@PathVariable("sid") String sid, @PathVariable("username") String username) {
         if (!VerifyUtils.isObjectNumber(sid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
         Subject subject = SecurityUtils.getSubject();
         if (subject.isPermitted(UserRole.TEACHER.name() + ":" + username)) {
             Student student = studentService.getById(sid);
             Teacher teacher = teacherService.queryByUserName(username);
+            if (student == null || teacher == null) return new R().fail("信息有误,无法添加");
+            if (teacherStudentService.getByTeacherIdAndStudentId(teacher.getId(), student.getId()) == null) {
+                TeacherStudent teacherStudent = new TeacherStudent();
+                teacherStudent.setTeacherId(teacher.getId());
+                teacherStudent.setStudentId(student.getId());
+                if (teacherStudentService.save(teacherStudent)) {
+                    return new R().success("添加成功");
+                }
+                return new R().fail("添加失败");
+            }
+            return new R().fail("信息已存在,请勿重复添加");
+        }
+        return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
+    }
+
+    /**
+     * 将某学生加入老师的学生列表
+     * @param sUsername 学生username
+     * @param tUsername 老师username
+     */
+    @GetMapping("/{tUsername}/addstudent/username/{sUsername}")
+    public R addStudentToTeacherStudentByUsername(@PathVariable("sUsername") String sUsername, @PathVariable("tUsername") String tUsername) {
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isPermitted(UserRole.TEACHER.name() + ":" + tUsername)) {
+            Student student = studentService.queryByUserName(sUsername);
+            Teacher teacher = teacherService.queryByUserName(tUsername);
             if (student == null || teacher == null) return new R().fail("信息有误,无法添加");
             if (teacherStudentService.getByTeacherIdAndStudentId(teacher.getId(), student.getId()) == null) {
                 TeacherStudent teacherStudent = new TeacherStudent();
@@ -202,7 +228,7 @@ public class TeacherController {
     }
 
     /**
-     * 通过老师ID删除学生
+     * 通过老师ID删除老师
      * @param tid 老师ID
      */
     @RequiresRoles("ADMIN")

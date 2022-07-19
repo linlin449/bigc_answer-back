@@ -33,7 +33,7 @@ public class TeacherStudentServiceImpl extends ServiceImpl<TeacherStudentMapper,
 
     @Resource(name = "teacherServiceImpl")
     private TeacherService teacherService;
-    @Resource
+    @Resource(name = "studentServiceImpl")
     private StudentService studentService;
 
     @Override

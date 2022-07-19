@@ -9,6 +9,11 @@ spring:
       url: jdbc:mysql://localhost:3306/bigc_answer?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: root
       password: linlinop
+  mail:
+    host: smtp.163.com
+    username:
+    password:
+    port: 25
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
