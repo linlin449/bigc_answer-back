@@ -79,6 +79,10 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
                 return false;
             }
         }
+        if (studentMapper.deleteById(studentId) != 1) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return false;
+        }
         return true;
     }
 }

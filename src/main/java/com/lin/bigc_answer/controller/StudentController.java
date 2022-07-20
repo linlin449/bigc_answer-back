@@ -122,6 +122,10 @@ public class StudentController {
         return new R().success("success", studentService.getStudentPage(Integer.parseInt(pid), 10));
     }
 
+    /**
+     * 删除学生所有信息
+     * @param username 学生username
+     */
     @RequiresRoles("ADMIN")
     @GetMapping("/delete/{username}")
     public R deleteStudent(@PathVariable("username") String username) {

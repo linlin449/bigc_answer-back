@@ -247,5 +247,46 @@ public class TeacherController {
         }
         return new R().fail("老师不存在,无法删除");
     }
+
+    /**
+     * 添加老师
+     * @param teacher 老师实体类
+     */
+    @RequiresRoles("ADMIN")
+    @PostMapping("/add")
+    public R addTeacher(@RequestBody Teacher teacher) {
+        if (teacher.getId() != null) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        if (teacher.getName().length() == 0 || teacher.getName().length() > 20) return new R().fail("姓名长度超出范围");
+        if (teacher.getUsername().length() < 7 || teacher.getUsername().length() > 13) return new R().fail("用户名长度超出范围");
+        if (teacher.getPassword().length() < 6 || teacher.getPassword().length() > 16) return new R().fail("密码长度超出范围");
+        if (teacherService.queryByUserName(teacher.getUsername()) != null) return new R().fail("该用户名已存在,无法添加");
+        if (teacherService.save(teacher)) {
+            return new R().success("添加成功");
+        }
+        return new R().fail("添加失败");
+    }
+
+    /**
+     * 重置老师密码
+     * @param tid 老师ID
+     * @return 返回重置后的密码(data)
+     */
+    @RequiresRoles("ADMIN")
+    @GetMapping("/resetpassword/{tid}")
+    public R resetPassword(@PathVariable("tid") String tid) {
+        if (!VerifyUtils.isObjectNumber(tid)) return new R().fail("参数错误", null, ErrorCode.NORMAL_SUCCESS);
+        Teacher teacher = teacherService.getById(tid);
+        if (teacher == null) return new R().fail("老师不存在,无法重置密码");
+        char[] str = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'm', 'n', 'p', 'Q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '2', '3', '4', '5', '6', '7', '8', '9'};
+        StringBuilder pwd = new StringBuilder();
+        for (int i = 0; i < 12; i++) {
+            pwd.append(str[(int) Math.round((str.length - 1) * Math.random())]);
+        }
+        teacher.setPassword(pwd.toString());
+        if (teacherService.updateById(teacher)) {
+            return new R().success("success", pwd);
+        }
+        return new R().fail("密码重置失败");
+    }
 }
 
