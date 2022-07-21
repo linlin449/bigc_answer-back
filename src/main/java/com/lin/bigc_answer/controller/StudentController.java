@@ -138,5 +138,62 @@ public class StudentController {
         }
         return new R().fail("学生不存在,无法删除");
     }
+
+    /**
+     * 重置学生密码
+     * @param sid 学生ID
+     * @return 返回重置后的密码(data)
+     */
+    @RequiresRoles("ADMIN")
+    @GetMapping("/resetpassword/{sid}")
+    public R resetStudentPassword(@PathVariable("sid") String sid) {
+        if (!VerifyUtils.isObjectNumber(sid)) return new R().fail("参数错误", null, ErrorCode.NORMAL_SUCCESS);
+        Student student = studentService.getById(sid);
+        if (student == null) return new R().fail("学生不存在,无法重置密码");
+        char[] str = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'm', 'n', 'p', 'Q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '2', '3', '4', '5', '6', '7', '8', '9'};
+        StringBuilder pwd = new StringBuilder();
+        for (int i = 0; i < 12; i++) {
+            pwd.append(str[(int) Math.round((str.length - 1) * Math.random())]);
+        }
+        student.setPassword(pwd.toString());
+        if (studentService.updateById(student)) {
+            return new R().success("success", pwd);
+        }
+        return new R().fail("密码重置失败");
+    }
+
+    /**
+     * 修改学生个人信息
+     * @param student 学生实体类
+     */
+    @RequiresRoles("ADMIN")
+    @PutMapping("/update")
+    public R updateStudent(@RequestBody Student student) {
+        if (student.getId() == null) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        student.setPassword(null);
+        student.setRole(null);
+        if (studentService.updateById(student)) {
+            return new R().success("修改成功");
+        }
+        return new R().fail("修改失败");
+    }
+
+    /**
+     * 添加学生
+     * @param student 学生实体类
+     */
+    @RequiresRoles("ADMIN")
+    @PostMapping("/add")
+    public R addStudent(@RequestBody Student student) {
+        if (student.getId() != null) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        if (student.getName().length() == 0 || student.getName().length() > 20) return new R().fail("姓名长度超出范围");
+        if (student.getUsername().length() < 7 || student.getUsername().length() > 13) return new R().fail("用户名长度超出范围");
+        if (student.getPassword().length() < 6 || student.getPassword().length() > 16) return new R().fail("密码长度超出范围");
+        if (studentService.queryByUserName(student.getUsername()) != null) return new R().fail("该用户名已存在,无法添加");
+        if (studentService.save(student)) {
+            return new R().success("添加成功");
+        }
+        return new R().fail("添加失败");
+    }
 }
 
