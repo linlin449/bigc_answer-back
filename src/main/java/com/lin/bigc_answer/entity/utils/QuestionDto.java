@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class QuestionDto {
+    private Integer subjectId;
     private String subjectname;
     private List<Chapter> chapters;
 }

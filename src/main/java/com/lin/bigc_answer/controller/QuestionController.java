@@ -247,7 +247,7 @@ public class QuestionController {
      * @return
      */
     @RequiresRoles("TEACHER")
-    @PutMapping("/uptate")
+    @PutMapping("/update")
     public R updateQuestion(@RequestBody Question question) {
         if (chapterService.getById(question.getChapterId()) == null) return new R().fail("更新失败,章节不存在");
         if (subjectService.getById(question.getSubjectId()) == null) return new R().fail("更新失败,课程不存在");

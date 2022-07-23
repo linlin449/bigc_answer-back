@@ -59,6 +59,7 @@ public class ChapterController {
         for (Subject subject : subjects) {
             List<Chapter> chapters = chapterService.getListBySubjectId(subject.getId());
             QuestionDto questionDto = new QuestionDto();
+            questionDto.setSubjectId(subject.getId());
             questionDto.setSubjectname(subject.getName());
             questionDto.setChapters(chapters);
             questionDtos.add(questionDto);

@@ -95,16 +95,32 @@ public class QuestionRightAnswerController {
         }
         return new R().fail("添加失败");
     }
-
     @RequiresRoles("TEACHER")
     @PutMapping("/uptate")
-    public R updateRightAnswer(@RequestBody QuestionRightAnswer questionRightAnswer) {
+    public R updateRightAnswer(@RequestBody QuestionRightAnswer questionRightAnswer){
         if (questionRightAnswer.getQuestionId() == null) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
-        if (questionRightAnswerService.getByQuestionId(questionRightAnswer.getQuestionId()) != null) {
+        QuestionRightAnswer qRA=questionRightAnswerService.getByQuestionId(questionRightAnswer.getQuestionId());
+        if (qRA != null) {
+            questionRightAnswer.setId(qRA.getId());
             questionRightAnswerService.updateById(questionRightAnswer);
             return new R().success("更新成功");
         }
         return new R().fail("更新失败");
+    }
+
+    /**
+     *
+     * @param qid
+     * @return
+     */
+    @GetMapping("/question/{qid}")
+    public R get(@PathVariable("qid") String qid) {
+        if (!VerifyUtils.isObjectNumber(qid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        QuestionRightAnswer questionRightAnswer=questionRightAnswerService.getByQuestionId(Integer.valueOf(qid));
+        if (questionRightAnswer != null) {
+            return new R().success("success", questionRightAnswer);
+        }
+        return new R().fail("题目正确答案不存在");
     }
 }
 
