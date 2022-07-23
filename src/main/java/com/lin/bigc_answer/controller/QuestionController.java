@@ -248,10 +248,10 @@ public class QuestionController {
      */
     @RequiresRoles("TEACHER")
     @PutMapping("/uptate")
-    public R updateQuestion(@RequestBody Question question){
+    public R updateQuestion(@RequestBody Question question) {
         if (chapterService.getById(question.getChapterId()) == null) return new R().fail("更新失败,章节不存在");
         if (subjectService.getById(question.getSubjectId()) == null) return new R().fail("更新失败,课程不存在");
-        if(questionService.updateById(question)){
+        if (questionService.updateById(question)) {
             return new R().success("更新成功");
         }
         return new R().fail("更新失败");
@@ -284,11 +284,16 @@ public class QuestionController {
                 AnswerDetail answerDetail = new AnswerDetail();
                 answerDetail.setQuestionId(Integer.valueOf(questionID));
                 answerDetail.setStudentId(student.getId());
-                if (questionRightAnswer.getRightAnswer().equals(answer)) {
-                    result.put("result", true);
-                    answerDetail.setIsRight(1);
+                answerDetail.setAnswerText(answer);
+                if (question.getTypeId() != 3) {
+                    if (questionRightAnswer.getRightAnswer().equals(answer)) {
+                        result.put("result", true);
+                        answerDetail.setIsRight(1);
+                    } else {
+                        result.put("result", false);
+                    }
                 } else {
-                    result.put("result", false);
+                    result.put("result", null);
                 }
                 answerDetail.setIsRight(0);
                 if (answerDetailService.save(answerDetail)) {

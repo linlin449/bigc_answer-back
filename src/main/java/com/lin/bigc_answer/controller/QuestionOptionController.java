@@ -84,7 +84,7 @@ public class QuestionOptionController {
      */
     @RequiresRoles("TEACHER")
     @PutMapping("/update")
-    public R updateOption(@RequestBody QuestionOption questionOption){
+    public R updateOption(@RequestBody QuestionOption questionOption) {
         if (questionOption.getQuestionId() == null) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
         if (questionOptionService.getByQuestionId(questionOption.getQuestionId()) != null) {
             questionOptionService.updateById(questionOption);

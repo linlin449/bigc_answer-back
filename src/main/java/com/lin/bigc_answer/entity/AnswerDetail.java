@@ -33,5 +33,6 @@ public class AnswerDetail implements Serializable {
      */
     private Integer isRight;
 
-
+    //提交的答案
+    private String answerText;
 }

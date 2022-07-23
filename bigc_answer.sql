@@ -20,7 +20,7 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `role` tinyint DEFAULT '1',
@@ -36,6 +36,7 @@ CREATE TABLE `answer_detail` (
   `student_id` int DEFAULT NULL,
   `question_id` int DEFAULT NULL,
   `is_right` tinyint DEFAULT NULL COMMENT '0错误，1正确',
+  `answer_text` longtext NULL,
   PRIMARY KEY (`id`),
   KEY `学生的答题详情` (`student_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -58,7 +59,7 @@ CREATE TABLE `answer_totle` (
 -- ----------------------------
 DROP TABLE IF EXISTS `chapter`;
 CREATE TABLE `chapter` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `subject_id` int NOT NULL,
   PRIMARY KEY (`id`)
@@ -225,7 +226,7 @@ CREATE TABLE `student_false_question` (
 -- ----------------------------
 DROP TABLE IF EXISTS `subject`;
 CREATE TABLE `subject` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `major_id` int NOT NULL,
   PRIMARY KEY (`id`)
