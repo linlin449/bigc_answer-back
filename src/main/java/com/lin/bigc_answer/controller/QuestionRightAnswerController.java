@@ -113,6 +113,7 @@ public class QuestionRightAnswerController {
      * @param qid
      * @return
      */
+    @RequiresRoles("TEACHER")
     @GetMapping("/question/rightquestion/{qid}")
     public R get(@PathVariable("qid") String qid) {
         if (!VerifyUtils.isObjectNumber(qid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
