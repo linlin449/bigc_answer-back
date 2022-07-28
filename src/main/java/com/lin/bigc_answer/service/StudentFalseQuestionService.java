@@ -29,5 +29,28 @@ public interface StudentFalseQuestionService extends IService<StudentFalseQuesti
      * @param pageSize 页大小
      * @return IPage<StudentFalseQuestion>
      */
+    @Deprecated
     IPage<StudentFalseQuestion> selectLikePageByStudentId(Integer studentId, int currentPage, int pageSize);
+
+    /**
+     * 根据学生用户名获取收藏题目数量
+     * @param username 学生username
+     * @return 学生不存在返回null, 否则返回收藏题目数量
+     */
+    Integer getCountByUsername(String username);
+
+    /**
+     * 根据问题ID和学生id删除收藏题目
+     * @param questionId 问题ID
+     * @param studentId 学生Id
+     * @return 删除成功返回真, 失败返回假, 收藏不存在返回null
+     */
+    Boolean deleteByQuestionIdAndUsername(Integer questionId, Integer studentId);
+
+    /**
+     * 根据题目ID和学生id获取收藏题目实体类
+     * @param questionId 问题ID
+     * @return 获取成功返回实体类, 失败返回null
+     */
+    StudentFalseQuestion getByQuestionIdAndUsername(Integer questionId, Integer studentId);
 }
