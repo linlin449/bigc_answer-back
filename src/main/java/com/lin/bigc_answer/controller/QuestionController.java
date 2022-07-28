@@ -290,12 +290,12 @@ public class QuestionController {
                         result.put("result", true);
                         answerDetail.setIsRight(1);
                     } else {
+                        answerDetail.setIsRight(0);
                         result.put("result", false);
                     }
                 } else {
                     result.put("result", null);
                 }
-                answerDetail.setIsRight(0);
                 if (answerDetailService.save(answerDetail)) {
                     return new R().success("success", result);
                 }
