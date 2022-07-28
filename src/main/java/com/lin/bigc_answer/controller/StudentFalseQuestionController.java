@@ -3,8 +3,10 @@ package com.lin.bigc_answer.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lin.bigc_answer.entity.StudentFalseQuestion;
+import com.lin.bigc_answer.entity.question.Question;
 import com.lin.bigc_answer.entity.user.Student;
 import com.lin.bigc_answer.exception.ErrorCode;
+import com.lin.bigc_answer.service.QuestionService;
 import com.lin.bigc_answer.service.StudentFalseQuestionService;
 import com.lin.bigc_answer.service.StudentService;
 import com.lin.bigc_answer.utils.R;
@@ -33,6 +35,60 @@ public class StudentFalseQuestionController {
     private StudentFalseQuestionService studentFalseQuestionService;
     @Resource(name = "studentServiceImpl")
     private StudentService studentService;
+    @Resource(name = "questionServiceImpl")
+    private QuestionService questionService;
+
+    /**
+     * 添加收藏题目
+     * @param qid 题目ID
+     * @param username 学生username
+     */
+    @GetMapping("/add/{qid}/username/{username}")
+    public R addFavoriteQuestion(@PathVariable("qid") String qid, @PathVariable("username") String username) {
+        if (!VerifyUtils.isObjectNumber(qid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isPermitted(UserRole.STUDENT + ":" + username)) {
+            Student student = studentService.queryByUserName(username);
+            if (student != null) {
+                if (studentFalseQuestionService.getByQuestionIdAndUserId(Integer.valueOf(qid), student.getId()) == null) {
+                    Question question = questionService.getById(qid);
+                    if (question != null) {
+                        StudentFalseQuestion studentFalseQuestion = new StudentFalseQuestion();
+                        studentFalseQuestion.setQuestionId(Integer.valueOf(qid));
+                        studentFalseQuestion.setStudentId(student.getId());
+                        studentFalseQuestion.setChapterId(question.getChapterId());
+                        if (studentFalseQuestionService.save(studentFalseQuestion)) {
+                            return new R().success("收藏成功");
+                        }
+                        return new R().fail("收藏失败");
+                    }
+                    return new R().fail("题目不存在,无法收藏");
+                }
+                return new R().fail("该题已被收藏,请勿重复添加");
+            }
+            return new R().fail("学生不存在");
+        }
+        return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
+    }
+
+    /**
+     * 检查某题是否已收藏
+     * @param qid 问题ID
+     * @param username 学生username
+     */
+    @GetMapping("/isfavorite/{qid}/username/{username}")
+    public R isQuestionFavorite(@PathVariable("qid") String qid, @PathVariable("username") String username) {
+        if (!VerifyUtils.isObjectNumber(qid)) return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isPermitted(UserRole.STUDENT + ":" + username)) {
+            Student student = studentService.queryByUserName(username);
+            if (student != null) {
+                return new R().success("success", studentFalseQuestionService.getByQuestionIdAndUserId(Integer.valueOf(qid), student.getId()) != null);
+            }
+            return new R().fail("学生不存在");
+        }
+        return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
+    }
 
     /**
      * 获取学生收藏题目的数量
@@ -113,7 +169,7 @@ public class StudentFalseQuestionController {
         if (subject.isPermitted(UserRole.STUDENT + ":" + username)) {
             Student student = studentService.queryByUserName(username);
             if (student != null) {
-                StudentFalseQuestion question = studentFalseQuestionService.getByQuestionIdAndUsername(Integer.valueOf(qid), student.getId());
+                StudentFalseQuestion question = studentFalseQuestionService.getByQuestionIdAndUserId(Integer.valueOf(qid), student.getId());
                 if (question != null) {
                     if (!question.getNote().equals(note.toString())) {
                         question.setNote(note.toString());

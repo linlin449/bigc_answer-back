@@ -52,5 +52,5 @@ public interface StudentFalseQuestionService extends IService<StudentFalseQuesti
      * @param questionId 问题ID
      * @return 获取成功返回实体类, 失败返回null
      */
-    StudentFalseQuestion getByQuestionIdAndUsername(Integer questionId, Integer studentId);
+    StudentFalseQuestion getByQuestionIdAndUserId(Integer questionId, Integer studentId);
 }

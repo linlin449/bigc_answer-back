@@ -63,7 +63,7 @@ public class StudentFalseQuestionServiceImpl extends ServiceImpl<StudentFalseQue
     }
 
     @Override
-    public StudentFalseQuestion getByQuestionIdAndUsername(Integer questionId, Integer studentId) {
+    public StudentFalseQuestion getByQuestionIdAndUserId(Integer questionId, Integer studentId) {
         if (questionId == null || studentId == null) return null;
         LambdaQueryWrapper<StudentFalseQuestion> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(StudentFalseQuestion::getQuestionId, questionId);
