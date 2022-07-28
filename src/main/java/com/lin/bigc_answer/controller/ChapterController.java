@@ -72,7 +72,7 @@ public class ChapterController {
      * @param chapter 章节实体类
      */
     @RequiresRoles("TEACHER")
-    @GetMapping("/add")
+    @PostMapping("/add")
     public R addChapter(@RequestBody Chapter chapter) {
         if (subjectService.getById(chapter.getSubjectId()) == null) return new R().fail("添加失败,课程不存在");
         if (chapterService.save(chapter)) {
@@ -81,6 +81,20 @@ public class ChapterController {
         return new R().fail("添加失败");
     }
 
+    /**
+     * 更新章节
+     * @param chapter
+     * @return
+     */
+    @RequiresRoles("TEACHER")
+    @PostMapping("/update")
+    public R updateChapter(@RequestBody Chapter chapter){
+        if (subjectService.getById(chapter.getSubjectId()) == null) return new R().fail("跟新失败,课程不存在");
+        if (chapterService.updateById(chapter)) {
+            return new R().success("更新成功");
+        }
+        return new R().fail("更新失败");
+    }
     /**
      * 根据章节ID删除章节
      * @param cid 章节ID

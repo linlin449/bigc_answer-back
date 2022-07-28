@@ -83,6 +83,20 @@ public class SubjectController {
     }
 
     /**
+     * 更新课程
+     * @param subject
+     * @return
+     */
+    @RequiresRoles("TEACHER")
+    @PostMapping("/update")
+    public R updateSubject(@RequestBody Subject subject){
+        if (majorService.getById(subject.getMajorId()) == null) return new R().fail("更新失败,专业不存在");
+        if (subjectService.updateById(subject)) {
+            return new R().success("更新成功");
+        }
+        return new R().fail("更新失败");
+    }
+    /**
      * 通过课程ID删除课程
      * @param sid 课程ID
      */
