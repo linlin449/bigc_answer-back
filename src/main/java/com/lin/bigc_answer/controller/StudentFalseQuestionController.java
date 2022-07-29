@@ -171,7 +171,7 @@ public class StudentFalseQuestionController {
             if (student != null) {
                 StudentFalseQuestion question = studentFalseQuestionService.getByQuestionIdAndUserId(Integer.valueOf(qid), student.getId());
                 if (question != null) {
-                    if (!question.getNote().equals(note.toString())) {
+                    if (question.getNote() == null || !question.getNote().equals(note.toString())) {
                         question.setNote(note.toString());
                         if (studentFalseQuestionService.updateById(question)) {
                             return new R().success("修改成功");
