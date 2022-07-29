@@ -46,6 +46,19 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     }
 
     @Override
+    public List<Question> getQuestionListByIdList(List<Integer> idList) {
+        List<Question> result = new ArrayList<>();
+        for (Integer id : idList) {
+            if (id != null) {
+                result.add(questionMapper.selectById(id));
+                continue;
+            }
+            result.add(null);
+        }
+        return result;
+    }
+
+    @Override
     public IPage<Question> getQuestionPageBySubject(int subjectId, int currentPage, int pageSize) {
         IPage<Question> iPage = new Page<>(currentPage, pageSize);
         LambdaQueryWrapper<Question> wrapper = new LambdaQueryWrapper<>();
@@ -89,7 +102,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         Student student = studentService.queryByUserName(username);
         if (student != null) {
             AnswerDetail answerDetail = answerDetailService.getByQuestionIdAndStudentId(questionId, student.getId());
-            if (answerDetail == null) return null;
+            if (answerDetail == null || answerDetail.getIsRight() == null) return null;
             return answerDetail.getIsRight() == 1;
         }
         return null;

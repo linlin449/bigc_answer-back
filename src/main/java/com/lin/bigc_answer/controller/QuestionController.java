@@ -78,6 +78,15 @@ public class QuestionController {
     }
 
     /**
+     * 根据问题ID列表获取问题列表
+     * @param idList 问题ID列表
+     */
+    @GetMapping("/ids")
+    public R getQuestionList(@RequestParam("questionIds") List<Integer> idList) {
+        return new R().success("success", questionService.getQuestionListByIdList(idList));
+    }
+
+    /**
      * 根据subject和章节获取题目,页大小默认为10
      * @param page 页码
      * @param sid Subject ID
@@ -294,6 +303,7 @@ public class QuestionController {
                         result.put("result", false);
                     }
                 } else {
+                    answerDetail.setIsRight(0);
                     result.put("result", null);
                 }
                 if (answerDetailService.save(answerDetail)) {

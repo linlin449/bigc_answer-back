@@ -24,6 +24,13 @@ public interface QuestionService extends IService<Question> {
     IPage<Question> getQuestionPage(int currentPage, int pageSize);
 
     /**
+     * 根据问题id列表获取问题列表
+     * @param idList 问题id列表
+     * @return 问题列表
+     */
+    List<Question> getQuestionListByIdList(List<Integer> idList);
+
+    /**
      * 根据章节ID分页获取所有题目
      * @param subjectId 章节ID
      * @param currentPage 当前页码
