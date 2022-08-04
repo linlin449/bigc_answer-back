@@ -87,15 +87,15 @@ public class QuestionController {
     }
 
     /**
-     * 根据subject和章节获取题目,页大小默认为10
+     * 根据章节分页获取题目,页大小默认为10
      * @param page 页码
      * @param sid Subject ID
      */
-    @GetMapping("/list/{page}/subject/{sid}")
+    @GetMapping("/list/{page}/chapter/{sid}")
     public R getQuestionPageByChapter(@PathVariable("page") String page, @PathVariable("sid") String sid) {
         if (!VerifyUtils.isObjectNumber(page) || !VerifyUtils.isObjectNumber(sid))
             return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
-        IPage<Question> questionIPage = questionService.getQuestionPageBySubject(Integer.parseInt(sid), Integer.parseInt(page), 10);
+        IPage<Question> questionIPage = questionService.getQuestionPageByChapter(Integer.parseInt(sid), Integer.parseInt(page), 10);
         return new R().success("success", questionIPage);
     }
 

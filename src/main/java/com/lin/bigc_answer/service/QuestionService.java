@@ -32,12 +32,12 @@ public interface QuestionService extends IService<Question> {
 
     /**
      * 根据章节ID分页获取所有题目
-     * @param subjectId 章节ID
+     * @param chapterId 章节ID
      * @param currentPage 当前页码
      * @param pageSize 页大小
      * @return IPage<Question>
      */
-    IPage<Question> getQuestionPageBySubject(int subjectId, int currentPage, int pageSize);
+    IPage<Question> getQuestionPageByChapter(int chapterId, int currentPage, int pageSize);
 
     /**
      * 获取学生答过的题目

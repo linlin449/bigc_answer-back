@@ -59,10 +59,10 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     }
 
     @Override
-    public IPage<Question> getQuestionPageBySubject(int subjectId, int currentPage, int pageSize) {
+    public IPage<Question> getQuestionPageByChapter(int chapterId, int currentPage, int pageSize) {
         IPage<Question> iPage = new Page<>(currentPage, pageSize);
         LambdaQueryWrapper<Question> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Question::getSubjectId, subjectId);
+        wrapper.eq(Question::getChapterId, chapterId);
         return questionMapper.selectPage(iPage, wrapper);
     }
 
