@@ -95,7 +95,7 @@ public class QuestionController {
     public R getQuestionPageByChapter(@PathVariable("page") String page, @PathVariable("sid") String sid) {
         if (!VerifyUtils.isObjectNumber(page) || !VerifyUtils.isObjectNumber(sid))
             return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
-        IPage<Question> questionIPage = questionService.getQuestionPageByChapter(Integer.parseInt(sid), Integer.parseInt(page), 10);
+        IPage<Question> questionIPage = questionService.getQuestionPageByChapter(Integer.parseInt(sid), Integer.parseInt(page), 20);
         return new R().success("success", questionIPage);
     }
 
