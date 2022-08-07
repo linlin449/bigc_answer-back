@@ -53,4 +53,11 @@ public interface StudentFalseQuestionService extends IService<StudentFalseQuesti
      * @return 获取成功返回实体类, 失败返回null
      */
     StudentFalseQuestion getByQuestionIdAndUserId(Integer questionId, Integer studentId);
+
+    /**
+     * 根据题目ID删除收藏题目
+     * @param questionId 问题ID
+     * @return 删除成功返回真,失败返回假,问题不存在返回null
+     */
+    Boolean deleteByQuestionId(Integer questionId);
 }

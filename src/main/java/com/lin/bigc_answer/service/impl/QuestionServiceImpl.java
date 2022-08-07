@@ -39,6 +39,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     @Resource(name = "questionRightAnswerServiceImpl")
     private QuestionRightAnswerService questionRightAnswerService;
 
+    @Resource(name = "studentFalseQuestionServiceImpl")
+    private StudentFalseQuestionService studentFalseQuestionService;
+
     @Override
     public IPage<Question> getQuestionPage(int currentPage, int pageSize) {
         IPage<Question> iPage = new Page<>(currentPage, pageSize);
@@ -181,7 +184,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     public Boolean deleteQuestionAndOptionById(Integer questionId) {
         if (questionId == null) return false;
         if (questionMapper.selectById(questionId) == null) return null;
-        if (questionRightAnswerService.deleteByQuestionId(questionId) != Boolean.FALSE && questionOptionService.deleteByQuestionId(questionId) != Boolean.FALSE) {
+        if (questionRightAnswerService.deleteByQuestionId(questionId) != Boolean.FALSE && questionOptionService.deleteByQuestionId(questionId) != Boolean.FALSE && studentFalseQuestionService.deleteByQuestionId(questionId)) {
             if (questionMapper.deleteById(questionId) == 1) {
                 return true;
             }

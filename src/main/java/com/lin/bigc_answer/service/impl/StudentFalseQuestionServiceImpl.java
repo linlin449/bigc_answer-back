@@ -70,4 +70,12 @@ public class StudentFalseQuestionServiceImpl extends ServiceImpl<StudentFalseQue
         wrapper.eq(StudentFalseQuestion::getStudentId, studentId);
         return studentFalseQuestionMapper.selectOne(wrapper);
     }
+
+    @Override
+    public Boolean deleteByQuestionId(Integer questionId) {
+        if (questionId == null) return null;
+        LambdaQueryWrapper<StudentFalseQuestion> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(StudentFalseQuestion::getQuestionId, questionId);
+        return studentFalseQuestionMapper.delete(wrapper) >= 0;
+    }
 }
