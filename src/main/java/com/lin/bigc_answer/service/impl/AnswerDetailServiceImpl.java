@@ -53,4 +53,12 @@ public class AnswerDetailServiceImpl extends ServiceImpl<AnswerDetailMapper, Ans
         wrapper.eq(AnswerDetail::getStudentId, studentId).eq(AnswerDetail::getIsRight, false);
         return answerDetailMapper.selectPage(iPage, wrapper);
     }
+
+    @Override
+    public Boolean deleteByQuestionId(Integer questionId) {
+        if (questionId == null) return null;
+        LambdaQueryWrapper<AnswerDetail> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(AnswerDetail::getQuestionId, questionId);
+        return answerDetailMapper.delete(wrapper) >= 0;
+    }
 }

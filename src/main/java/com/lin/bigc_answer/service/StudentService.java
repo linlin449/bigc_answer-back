@@ -33,4 +33,12 @@ public interface StudentService extends IService<Student> {
      * @param studentId 学生ID
      */
     boolean deleteStudentInfo(Integer studentId);
+
+    /**
+     * 修改学生密码
+     * @param username 学生用户名
+     * @param newPassword 新密码
+     * @return 修改成功返回真, 失败返回假, 学生不存在返回null
+     */
+    Boolean changePassword(String username, String newPassword);
 }

@@ -17,6 +17,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +99,34 @@ public class AdminController {
             admin.hidePassword();
         }
         return new R().success("success", adminList);
+    }
+
+    /**
+     * 修改密码
+     * @param params 提交参数,需包含 oldPass newPass repeatPass
+     */
+    @PostMapping("/password")
+    public R changePassword(@RequestBody Map<String, String> params, HttpServletRequest request) {
+        String oldPass = params.get("oldPass");
+        String newPass = params.get("newPass");
+        String repeatPass = params.get("repeatPass");
+        if (oldPass == null || newPass == null || repeatPass == null)
+            return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
+        if (!newPass.equals(repeatPass)) return new R().fail("两次密码不一致");
+        if (newPass.length() < 6 || newPass.length() > 16) return new R().fail("密码长度为6-16");
+        Subject subject = SecurityUtils.getSubject();
+        String token = request.getHeader("X-Token");
+        String username = JWTUtil.getUserName(token);
+        if (subject.isPermitted(JWTUtil.getUserRole(token) + ":" + username)) {
+            if (adminService.queryByUserName(username).getPassword().equals(oldPass)) {
+                if (adminService.changePassword(username, newPass)) {
+                    return new R().success("密码修改成功");
+                }
+                return new R().fail("密码修改失败");
+            }
+            return new R().fail("密码输入错误");
+        }
+        return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
     }
 }
 

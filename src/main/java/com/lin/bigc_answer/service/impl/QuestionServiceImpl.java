@@ -184,7 +184,10 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     public Boolean deleteQuestionAndOptionById(Integer questionId) {
         if (questionId == null) return false;
         if (questionMapper.selectById(questionId) == null) return null;
-        if (questionRightAnswerService.deleteByQuestionId(questionId) != Boolean.FALSE && questionOptionService.deleteByQuestionId(questionId) != Boolean.FALSE && studentFalseQuestionService.deleteByQuestionId(questionId)) {
+        if (questionRightAnswerService.deleteByQuestionId(questionId) != Boolean.FALSE
+                && questionOptionService.deleteByQuestionId(questionId) != Boolean.FALSE
+                && studentFalseQuestionService.deleteByQuestionId(questionId) != Boolean.FALSE
+                && answerDetailService.deleteByQuestionId(questionId) != Boolean.FALSE) {
             if (questionMapper.deleteById(questionId) == 1) {
                 return true;
             }

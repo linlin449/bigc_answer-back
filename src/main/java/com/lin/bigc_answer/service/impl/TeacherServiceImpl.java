@@ -29,4 +29,13 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
         wrapper.eq(Teacher::getUsername, username);
         return teacherMapper.selectOne(wrapper);
     }
+
+    @Override
+    public Boolean changePassword(String username, String newPassword) {
+        if (newPassword == null || newPassword.equals("")) return false;
+        Teacher teacher = queryByUserName(username);
+        if (teacher == null) return null;
+        teacher.setPassword(newPassword);
+        return teacherMapper.updateById(teacher) == 1;
+    }
 }

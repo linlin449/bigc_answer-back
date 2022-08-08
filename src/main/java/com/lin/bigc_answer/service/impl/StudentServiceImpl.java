@@ -85,4 +85,13 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         }
         return true;
     }
+
+    @Override
+    public Boolean changePassword(String username, String newPassword) {
+        if (newPassword == null || newPassword.equals("")) return false;
+        Student student = queryByUserName(username);
+        if (student == null) return null;
+        student.setPassword(newPassword);
+        return studentMapper.updateById(student) == 1;
+    }
 }

@@ -47,4 +47,11 @@ public interface AnswerDetailService extends IService<AnswerDetail> {
      * @return IPage<AnswerDetail>
      */
     IPage<AnswerDetail> getWrongPageByStudentId(Integer studentId, int currentPage, int pageSize);
+
+    /**
+     * 根据问题ID删除答题详细
+     * @param questionId 问题ID
+     * @return 删除成功返回真, 失败返回假, 问题不存在返回null
+     */
+    Boolean deleteByQuestionId(Integer questionId);
 }

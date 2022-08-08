@@ -30,4 +30,13 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         wrapper.eq(Admin::getUsername, username);
         return adminMapper.selectOne(wrapper);
     }
+
+    @Override
+    public Boolean changePassword(String username, String newPassword) {
+        if (newPassword == null || newPassword.equals("")) return false;
+        Admin admin = queryByUserName(username);
+        if (admin == null) return null;
+        admin.setPassword(newPassword);
+        return adminMapper.updateById(admin) == 1;
+    }
 }
