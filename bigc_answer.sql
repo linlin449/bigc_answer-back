@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 80027
 File Encoding         : 65001
 
-Date: 2022-07-13 15:54:50
+Date: 2022-08-09 15:56:57
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -25,7 +25,7 @@ CREATE TABLE `admin` (
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `role` tinyint DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for answer_detail
@@ -36,23 +36,10 @@ CREATE TABLE `answer_detail` (
   `student_id` int DEFAULT NULL,
   `question_id` int DEFAULT NULL,
   `is_right` tinyint DEFAULT NULL COMMENT '0错误，1正确',
-  `answer_text` longtext NULL,
+  `answer_text` longtext,
   PRIMARY KEY (`id`),
   KEY `学生的答题详情` (`student_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- ----------------------------
--- Table structure for answer_totle
--- ----------------------------
-DROP TABLE IF EXISTS `answer_totle`;
-CREATE TABLE `answer_totle` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `student_id` int DEFAULT NULL,
-  `false_question_number` int DEFAULT NULL COMMENT '错题数目',
-  `true_question_number` int DEFAULT NULL COMMENT '正确题目数目',
-  `major_id` tinyint DEFAULT NULL COMMENT '所属专业',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for chapter
@@ -63,45 +50,7 @@ CREATE TABLE `chapter` (
   `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `subject_id` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- ----------------------------
--- Table structure for exam
--- ----------------------------
-DROP TABLE IF EXISTS `exam`;
-CREATE TABLE `exam` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `describe` longtext,
-  `limit_time` int DEFAULT NULL,
-  `subject_id` int DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- ----------------------------
--- Table structure for exam_question
--- ----------------------------
-DROP TABLE IF EXISTS `exam_question`;
-CREATE TABLE `exam_question` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `exam_id` int DEFAULT NULL,
-  `question_id` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `search_question_exam` (`exam_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- ----------------------------
--- Table structure for exam_student
--- ----------------------------
-DROP TABLE IF EXISTS `exam_student`;
-CREATE TABLE `exam_student` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `student_id` int DEFAULT NULL,
-  `exam_id` int DEFAULT NULL,
-  `exam_score` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `student_id` (`student_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for major
@@ -128,7 +77,7 @@ CREATE TABLE `question` (
   `subject_id` smallint DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `search_chapter` (`chapter_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for question_level
@@ -155,7 +104,7 @@ CREATE TABLE `question_option` (
   `F` longtext,
   PRIMARY KEY (`id`),
   KEY `question_id` (`question_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for question_right_answer
@@ -168,7 +117,7 @@ CREATE TABLE `question_right_answer` (
   `analysis` longtext,
   PRIMARY KEY (`id`),
   KEY `question_id` (`question_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for question_type
@@ -219,7 +168,7 @@ CREATE TABLE `student_false_question` (
   `is_like` tinyint DEFAULT '0' COMMENT '是否喜欢，默认为0，表示错题',
   PRIMARY KEY (`id`),
   KEY `student_id` (`student_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for subject
@@ -230,7 +179,7 @@ CREATE TABLE `subject` (
   `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `major_id` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for teacher
@@ -245,7 +194,7 @@ CREATE TABLE `teacher` (
   `phone` varchar(128) DEFAULT NULL,
   `role` tinyint DEFAULT '2' COMMENT '2为老师',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for teacher_student
@@ -257,4 +206,4 @@ CREATE TABLE `teacher_student` (
   `teacher_id` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `根据老师id查询学生id` (`teacher_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
