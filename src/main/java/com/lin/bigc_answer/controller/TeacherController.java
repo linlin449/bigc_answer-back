@@ -308,13 +308,17 @@ public class TeacherController {
         String token = request.getHeader("X-Token");
         String username = JWTUtil.getUserName(token);
         if (subject.isPermitted(JWTUtil.getUserRole(token) + ":" + username)) {
-            if (teacherService.queryByUserName(username).getPassword().equals(oldPass)) {
-                if (teacherService.changePassword(username, newPass)) {
-                    return new R().success("密码修改成功");
+            Teacher teacher = teacherService.queryByUserName(username);
+            if (teacher != null) {
+                if (teacher.getPassword().equals(oldPass)) {
+                    if (teacherService.changePassword(username, newPass)) {
+                        return new R().success("密码修改成功");
+                    }
+                    return new R().fail("密码修改失败");
                 }
-                return new R().fail("密码修改失败");
+                return new R().fail("密码输入错误");
             }
-            return new R().fail("密码输入错误");
+            return new R().fail("账号不存在");
         }
         return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
     }

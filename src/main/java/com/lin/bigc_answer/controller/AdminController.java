@@ -105,6 +105,7 @@ public class AdminController {
      * 修改密码
      * @param params 提交参数,需包含 oldPass newPass repeatPass
      */
+    @RequiresRoles("ADMIN")
     @PostMapping("/password")
     public R changePassword(@RequestBody Map<String, String> params, HttpServletRequest request) {
         String oldPass = params.get("oldPass");
@@ -114,11 +115,11 @@ public class AdminController {
             return new R().fail("参数错误", null, ErrorCode.PARAMETER_ERROR);
         if (!newPass.equals(repeatPass)) return new R().fail("两次密码不一致");
         if (newPass.length() < 6 || newPass.length() > 16) return new R().fail("密码长度为6-16");
-        Subject subject = SecurityUtils.getSubject();
         String token = request.getHeader("X-Token");
         String username = JWTUtil.getUserName(token);
-        if (subject.isPermitted(JWTUtil.getUserRole(token) + ":" + username)) {
-            if (adminService.queryByUserName(username).getPassword().equals(oldPass)) {
+        Admin admin = adminService.queryByUserName(username);
+        if (admin != null) {
+            if (admin.getPassword().equals(oldPass)) {
                 if (adminService.changePassword(username, newPass)) {
                     return new R().success("密码修改成功");
                 }
@@ -126,7 +127,7 @@ public class AdminController {
             }
             return new R().fail("密码输入错误");
         }
-        return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
+        return new R().fail("账号不存在");
     }
 }
 

@@ -214,13 +214,17 @@ public class StudentController {
         String token = request.getHeader("X-Token");
         String username = JWTUtil.getUserName(token);
         if (subject.isPermitted(JWTUtil.getUserRole(token) + ":" + username)) {
-            if (studentService.queryByUserName(username).getPassword().equals(oldPass)) {
-                if (studentService.changePassword(username, newPass)) {
-                    return new R().success("密码修改成功");
+            Student student = studentService.queryByUserName(username);
+            if (student != null) {
+                if (student.getPassword().equals(oldPass)) {
+                    if (studentService.changePassword(username, newPass)) {
+                        return new R().success("密码修改成功");
+                    }
+                    return new R().fail("密码修改失败");
                 }
-                return new R().fail("密码修改失败");
+                return new R().fail("密码输入错误");
             }
-            return new R().fail("密码输入错误");
+            return new R().fail("账号不存在");
         }
         return new R().fail("权限不足", null, ErrorCode.UNAUTHORIZED_ERROR);
     }
