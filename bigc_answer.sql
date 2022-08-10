@@ -15,6 +15,9 @@ Date: 2022-08-09 15:56:57
 
 SET FOREIGN_KEY_CHECKS=0;
 
+DROP DATABASE  IF EXISTS `bigc_answer`;
+CREATE DATABASE `bigc_answer`;
+USE `bigc_answer`;
 -- ----------------------------
 -- Table structure for admin
 -- ----------------------------
